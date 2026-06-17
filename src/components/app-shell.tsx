@@ -3,11 +3,12 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Eye, Moon, Search, Sun } from "lucide-react";
+import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Kbd, StatusDot } from "@/components/ui/misc";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { CommandPalette } from "@/components/command-palette";
+import { SettingsMenu } from "@/components/settings-menu";
 
 const NAV = [
   { label: "Terminal", href: "/" },
@@ -77,9 +78,7 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
                 <Kbd className="ml-auto">⌘K</Kbd>
               </button>
 
-              <ThemeToggle />
-
-              <ColorblindToggle />
+              <SettingsMenu />
 
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -109,67 +108,5 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
 
       <CommandPalette open={open} setOpen={setOpen} />
     </TooltipProvider>
-  );
-}
-
-function ColorblindToggle() {
-  const [on, setOn] = React.useState(false);
-  React.useEffect(() => {
-    const saved = localStorage.getItem("sigma-cb") === "1";
-    setOn(saved);
-    document.documentElement.classList.toggle("cb-safe", saved);
-  }, []);
-  const toggle = () => {
-    const next = !on;
-    setOn(next);
-    document.documentElement.classList.toggle("cb-safe", next);
-    localStorage.setItem("sigma-cb", next ? "1" : "0");
-  };
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          onClick={toggle}
-          aria-label="Toggle colorblind-safe palette"
-          className={cn(
-            "flex h-9 w-9 items-center justify-center rounded-md border border-line2 transition-colors hover:border-accent/60",
-            on ? "text-info" : "text-muted hover:text-fg",
-          )}
-        >
-          <Eye className="h-4 w-4" />
-        </button>
-      </TooltipTrigger>
-      <TooltipContent>
-        Colorblind-safe palette (blue/orange){on ? " · on" : " · off"}. ~8% of men have red/green
-        deficiency; a real terminal ships this.
-      </TooltipContent>
-    </Tooltip>
-  );
-}
-
-function ThemeToggle() {
-  const [light, setLight] = React.useState(false);
-  React.useEffect(() => {
-    setLight(document.documentElement.classList.contains("light"));
-  }, []);
-  const toggle = () => {
-    const next = !light;
-    setLight(next);
-    document.documentElement.classList.toggle("light", next);
-    localStorage.setItem("oshin-theme", next ? "light" : "dark");
-  };
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          onClick={toggle}
-          aria-label="Toggle light or dark theme"
-          className="flex h-9 w-9 items-center justify-center rounded-md border border-line2 text-muted transition-colors hover:border-accent/60 hover:text-fg"
-        >
-          {light ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-        </button>
-      </TooltipTrigger>
-      <TooltipContent>{light ? "Switch to dark" : "Switch to light"}</TooltipContent>
-    </Tooltip>
   );
 }
