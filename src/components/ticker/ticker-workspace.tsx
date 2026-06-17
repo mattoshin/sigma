@@ -131,7 +131,7 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
 
             <div className="grid gap-4 md:grid-cols-2">
               <VolPanel analysis={analysis} expiry={expiry} />
-              <CompanyFactsPanel facts={analysis.companyFacts} />
+              <CompanyFactsPanel facts={analysis.companyFacts} dcf={analysis.dcf} keyRatios={analysis.keyRatios} />
             </div>
           </div>
 
@@ -156,6 +156,7 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
               <StreetPanel
                 analysts={analysis.analysts}
                 spot={analysis.spot}
+                ratingActions={analysis.ratingActions}
                 onSeed={() =>
                   setView(makeViewFromStreet(analysis.ticker, expiry, analysis.spot, analysis.analysts!))
                 }

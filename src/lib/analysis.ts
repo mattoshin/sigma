@@ -9,11 +9,13 @@
  */
 
 import { getTickerBundle } from "@/lib/data";
-import { universeEntry } from "@/lib/config";
+import { universeEntry, FMP_ENABLED } from "@/lib/config";
 import { riskNeutralDensity, probAbove } from "@/lib/quant/impliedDistribution";
 import { expectedMove } from "@/lib/quant/expectedMove";
 import { realizedVol } from "@/lib/quant/realizedVol";
 import { volRiskPremium } from "@/lib/quant/vrp";
+import { getRiskFreeRate } from "@/lib/data/providers/fred";
+import { getDcf, getKeyRatios, getRatingActions, type DcfValue, type KeyRatio, type RatingAction } from "@/lib/data/providers/fmp";
 import type {
   AnalystConsensus,
   Catalyst,
@@ -61,6 +63,12 @@ export interface TickerAnalysis {
   companyFacts: CompanyFacts | null;
   analysts: AnalystConsensus | null;
   earningsDte: number | null;
+  /** Live risk-free rate from FRED when a key is set, else the default. */
+  riskFreeSource: "fred" | "default";
+  /** FMP enrichment (present only when FMP_API_KEY is set). */
+  ratingActions: RatingAction[];
+  dcf: DcfValue | null;
+  keyRatios: KeyRatio[];
 }
 
 function trimExpiry(exp: OptionExpiry, spot: number): OptionExpiry {
@@ -77,7 +85,9 @@ export async function buildTickerAnalysis(ticker: string): Promise<TickerAnalysi
   const bundle = await getTickerBundle(ticker);
   const chain = bundle.chain.data;
   const spot = chain.spot;
-  const r = chain.riskFreeRate;
+  const liveR = await getRiskFreeRate();
+  const r = liveR ?? chain.riskFreeRate;
+  const riskFreeSource: "fred" | "default" = liveR != null ? "fred" : "default";
   const q = chain.dividendYield;
   const entry = universeEntry(bundle.ticker);
   const earningsDte = bundle.earningsDte ?? null;
@@ -134,6 +144,21 @@ export async function buildTickerAnalysis(ticker: string): Promise<TickerAnalysi
   const rv30 = realizedVol(bundle.history.data, 30);
   const vrp = volRiskPremium(bundle.ticker, ref?.atmIV ?? bundle.atmVol ?? 0, rv21, rv30);
 
+  // FMP enrichment (additive; only when a key is set, each call falls back to empty/null).
+  let ratingActions: RatingAction[] = [];
+  let dcf: DcfValue | null = null;
+  let keyRatios: KeyRatio[] = [];
+  if (FMP_ENABLED) {
+    const [ra, d, kr] = await Promise.all([
+      getRatingActions(bundle.ticker).catch(() => []),
+      getDcf(bundle.ticker).catch(() => null),
+      getKeyRatios(bundle.ticker).catch(() => []),
+    ]);
+    ratingActions = ra;
+    dcf = d;
+    keyRatios = kr;
+  }
+
   return {
     ticker: bundle.ticker,
     name: bundle.quote.data.name ?? entry?.name ?? bundle.ticker,
@@ -152,5 +177,9 @@ export async function buildTickerAnalysis(ticker: string): Promise<TickerAnalysi
     companyFacts: bundle.companyFacts,
     analysts: bundle.analysts,
     earningsDte,
+    riskFreeSource,
+    ratingActions,
+    dcf,
+    keyRatios,
   };
 }

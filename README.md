@@ -50,8 +50,12 @@ Then press <kbd>⌘K</kbd> and type a ticker (SPY, AAPL, NVDA, …), or open `/t
 | `ANTHROPIC_API_KEY` | Enables the AI analyst (anchored scenario engine). Without it, everything else works and the AI panel shows a friendly disabled state. |
 | `OSHIN_AI_MODEL` | Override the model (default `claude-sonnet-4-6`). |
 | `OSHIN_FORCE_LIVE=1` | Prefer live data (yahoo-finance2) for every ticker, with automatic snapshot fallback on error. Default is snapshot-first so a live demo can't break. |
+| `FMP_API_KEY` | financialmodelingprep.com. Adds per-firm rating actions, the DCF fair-value anchor, and key ratios to the ticker workspace. Free tier works for most endpoints. |
+| `FRED_API_KEY` | fred.stlouisfed.org/docs/api/api_key.html. Uses the live 3-month Treasury yield as the risk-free rate in pricing instead of a constant. Free. |
+| `FINNHUB_API_KEY` | finnhub.io. Quotes, news, recommendation trends as a cross-check/fallback. Free 60 req/min. |
+| `ALPHAVANTAGE_API_KEY` | alphavantage.co. EOD historical options (25 req/day) for a future historical-implied study. Free. |
 
-Put them in `.env.local`.
+Put them in `.env.local` (copy `.env.local.example`). Every feature degrades gracefully to existing behavior when its key is absent.
 
 ### Data & honesty
 

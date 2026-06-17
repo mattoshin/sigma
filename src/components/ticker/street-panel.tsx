@@ -5,8 +5,9 @@ import { Panel, PanelBody, PanelHeader, PanelTitle } from "@/components/ui/panel
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { InfoHint } from "@/components/ui/tooltip";
-import { fmtMoney, fmtPct, fmtSignedPct } from "@/lib/format";
+import { fmtMoney, fmtPct, fmtSignedPct, fmtDateShort } from "@/lib/format";
 import type { AnalystConsensus } from "@/lib/types";
+import type { RatingAction } from "@/lib/data/providers/fmp";
 
 const KEY_LABEL: Record<string, string> = {
   strongBuy: "Strong Buy",
@@ -26,10 +27,12 @@ export function StreetPanel({
   analysts,
   spot,
   onSeed,
+  ratingActions = [],
 }: {
   analysts: AnalystConsensus;
   spot: number;
   onSeed: () => void;
+  ratingActions?: RatingAction[];
 }) {
   const upside = (analysts.targetMean - spot) / spot;
   const disagreement = (analysts.targetHigh - analysts.targetLow) / analysts.targetMean;
@@ -108,6 +111,27 @@ export function StreetPanel({
             )}
           </div>
         </div>
+
+        {ratingActions.length > 0 && (
+          <div className="border-t border-line pt-3">
+            <div className="eyebrow mb-1.5">Recent rating actions</div>
+            <div className="space-y-1">
+              {ratingActions.slice(0, 5).map((a, i) => {
+                const t = a.action.includes("up") ? "text-up" : a.action.includes("down") ? "text-down" : "text-muted";
+                return (
+                  <div key={i} className="flex items-center justify-between text-[12px]">
+                    <span className="text-fg">{a.firm}</span>
+                    <span className="mono text-faint">
+                      {a.fromGrade && <span>{a.fromGrade} → </span>}
+                      <span className={t}>{a.toGrade || a.action}</span>
+                      <span className="ml-1.5 text-faint">{fmtDateShort(a.date)}</span>
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="flex items-center justify-between gap-2 border-t border-line pt-3">
           <span className="text-[11px] leading-snug text-faint">
