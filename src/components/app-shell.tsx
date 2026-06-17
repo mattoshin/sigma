@@ -93,7 +93,9 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
           {tape}
         </div>
 
-        <main className="flex-1">{children}</main>
+        <main className="flex-1">
+          <div className="mx-auto w-full max-w-[1600px]">{children}</div>
+        </main>
 
         <footer className="border-t border-line px-4 py-3">
           <span className="eyebrow">

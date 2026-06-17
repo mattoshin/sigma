@@ -14,7 +14,6 @@ interface Props {
   spot: number;
   scenarios?: { price: number; label: string }[];
   band?: { lower: number; upper: number };
-  height?: number;
 }
 
 interface MergedPt {
@@ -37,10 +36,11 @@ export function DistributionChart({
   spot,
   scenarios = [],
   band,
-  height = 300,
 }: Props) {
   const [ref, width] = useChartWidth();
   const [hoverX, setHoverX] = React.useState<number | null>(null);
+  // Height scales with width to hold a ~2.6:1 aspect (so it never stretches flat on wide screens).
+  const height = Math.round(Math.min(390, Math.max(260, width * 0.36)));
 
   const padL = 8;
   const padR = 12;

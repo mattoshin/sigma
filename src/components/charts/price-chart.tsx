@@ -10,11 +10,11 @@ import type { PriceBar } from "@/lib/types";
 interface Props {
   bars: PriceBar[];
   band?: { upper: number; lower: number; movePct: number };
-  height?: number;
 }
 
-export function PriceChart({ bars, band, height = 220 }: Props) {
+export function PriceChart({ bars, band }: Props) {
   const [ref, width] = useChartWidth();
+  const height = Math.round(Math.min(240, Math.max(160, width * 0.2)));
   const padL = 8;
   const padR = 48;
   const padT = 12;
