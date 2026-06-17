@@ -1,39 +1,42 @@
 @import "tailwindcss";
 
 /*
- * Sigma terminal theme.
+ * Sigma terminal theme — "instrument, not dashboard".
  *
- * Dark, dense, high-contrast. Color carries meaning: amber for active/headers
- * (the Bloomberg nod), green/red strictly for up/down, cyan for interactive.
- * Numbers render with tabular figures (set on body) so digit columns align —
- * the single cheapest tell that separates "terminal" from "dashboard".
+ * Sharp corners, hairline rules, elevation by background-step rather than
+ * boxing everything. Space Grotesk carries display/body; IBM Plex Mono carries
+ * every number, ticker, and structural label. Color is meaning: amber is the
+ * signature/active state (the terminal nod), mint/coral are up/down only,
+ * azure is the market (implied), violet is the model. Numbers render tabular.
  */
 
 :root {
-  /* Surfaces */
-  --canvas: #08090c;
-  --panel: #0e1116;
-  --panel2: #141821;
-  --line: #20252f;
-  --line2: #2c333f;
+  /* Surfaces — a cool ink, lifted in steps not borders */
+  --canvas: #06070a;
+  --panel: #0c0e13;
+  --panel2: #12151c;
+  --raised: #171b23;
+  --line: #1b1f28;
+  --line2: #2a2f3a;
 
-  /* Text */
-  --fg: #e7eaef;
-  --muted: #9aa3b0;
-  --faint: #5f6773;
+  /* Text — brighter primary for real contrast */
+  --fg: #f4f6fa;
+  --muted: #9ba3b0;
+  --faint: #5a626f;
 
-  /* Semantics (green/red by default; remapped under .cb-safe) */
-  --up: #1ecb8b;
-  --down: #ff5a5f;
-  --accent: #f5a623; /* amber command/active */
-  --info: #4da3ff; /* interactive / links */
+  /* Signal */
+  --up: #29d39e;
+  --down: #ff5664;
+  --accent: #ffb020; /* signature amber */
+  --accent-deep: #c77f00;
+  --info: #5aa2ff; /* market / implied */
   --warn: #ffcb47;
-  --violet: #9d7bff;
+  --violet: #a98bff; /* model / AI */
 }
 
-/* Colorblind-safe palette: blue (up) / orange (down). Toggled on <html>. */
+/* Colorblind-safe: blue (up) / orange (down). */
 html.cb-safe {
-  --up: #4da3ff;
+  --up: #5aa2ff;
   --down: #ff9e2c;
 }
 
@@ -41,6 +44,7 @@ html.cb-safe {
   --color-canvas: var(--canvas);
   --color-panel: var(--panel);
   --color-panel2: var(--panel2);
+  --color-raised: var(--raised);
   --color-line: var(--line);
   --color-line2: var(--line2);
   --color-fg: var(--fg);
@@ -49,16 +53,18 @@ html.cb-safe {
   --color-up: var(--up);
   --color-down: var(--down);
   --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
   --color-info: var(--info);
   --color-warn: var(--warn);
   --color-violet: var(--violet);
 
-  --font-sans: var(--font-sans-ibm), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono-ibm), ui-monospace, "SF Mono", Menlo, monospace;
 
-  --radius-sm: 3px;
-  --radius-md: 5px;
-  --radius-lg: 8px;
+  /* Sharp — an instrument, not a card UI */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
 }
 
 * {
@@ -75,22 +81,19 @@ body {
   color: var(--fg);
   font-family: var(--font-sans);
   font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum" 1, "cv01" 1;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* Terminal scrollbars */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
 }
 ::-webkit-scrollbar-track {
   background: var(--canvas);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--line2);
-  border-radius: 4px;
   border: 2px solid var(--canvas);
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -98,30 +101,70 @@ body {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
-/* Numeric helpers */
+/* Data type — every number, ticker, structural label */
 .mono {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
-/* Subtle grid texture used behind hero areas */
+/* Display headlines: tight, confident */
+.display {
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
+}
+
+/* Eyebrow / structural label — the one repeated structural device */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* The distribution motif — a faint bell curve used as a structural backdrop */
+.curve-bg {
+  background-image: radial-gradient(
+    120% 90% at 50% 100%,
+    color-mix(in srgb, var(--accent) 8%, transparent) 0%,
+    transparent 60%
+  );
+}
+
 .grid-bg {
   background-image:
     linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 28px 28px;
-  background-position: -1px -1px;
-  opacity: 0.35;
+  background-size: 32px 32px;
+  background-position: center;
+  opacity: 0.25;
 }
 
-/* A thin animated "live" pulse for the data-status dot */
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+  50% { opacity: 0.3; }
 }
 .pulse-dot {
   animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Ticker tape marquee (content is duplicated for a seamless loop) */
+@keyframes tape {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-tape {
+  animation: tape 80s linear infinite;
+}
+.animate-tape:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-tape { animation: none; }
+  .pulse-dot { animation: none; }
 }

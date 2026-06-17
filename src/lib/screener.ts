@@ -10,7 +10,22 @@
 
 import { UNIVERSE } from "@/lib/config";
 import { buildTickerAnalysis } from "@/lib/analysis";
+import { loadSnapshot } from "@/lib/data/snapshots";
 import type { Catalyst } from "@/lib/types";
+
+export interface TapeRow {
+  ticker: string;
+  price: number;
+  changePct: number;
+}
+
+/** Lightweight tape feed (snapshot-only, no RND compute) for the header marquee. */
+export function getTickerTape(): TapeRow[] {
+  return UNIVERSE.map((u) => {
+    const s = loadSnapshot(u.ticker);
+    return { ticker: u.ticker, price: s?.quote.price ?? 0, changePct: s?.quote.changePct ?? 0 };
+  });
+}
 
 export interface ScreenerRowFull {
   ticker: string;

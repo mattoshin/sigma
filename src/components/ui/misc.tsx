@@ -6,7 +6,7 @@ export function Kbd({ className, children }: { className?: string; children: Rea
   return (
     <kbd
       className={cn(
-        "mono inline-flex h-5 min-w-5 items-center justify-center rounded-sm border border-line bg-panel2 px-1.5 text-[10px] text-muted",
+        "mono inline-flex h-5 min-w-5 items-center justify-center rounded-sm border border-line2 bg-canvas px-1.5 text-[10px] text-muted",
         className,
       )}
     >
@@ -15,20 +15,16 @@ export function Kbd({ className, children }: { className?: string; children: Rea
   );
 }
 
-/** A small uppercase section label. */
+/** The one repeated structural label device. */
 export function SectionLabel({ className, children }: { className?: string; children: React.ReactNode }) {
-  return (
-    <div className={cn("text-[10px] font-semibold uppercase tracking-[0.1em] text-faint", className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn("eyebrow", className)}>{children}</div>;
 }
 
 export function Separator({ className }: { className?: string }) {
   return <div className={cn("h-px w-full bg-line", className)} />;
 }
 
-/** A labeled stat cell — label above, big mono value below, optional sub. */
+/** A labeled stat cell — eyebrow label, confident mono value, optional sub. */
 export function Stat({
   label,
   value,
@@ -51,10 +47,10 @@ export function Stat({
           ? "text-accent"
           : "text-fg";
   return (
-    <div className={cn("flex flex-col gap-0.5", className)}>
-      <SectionLabel>{label}</SectionLabel>
-      <div className={cn("mono text-lg font-semibold leading-tight", toneClass)}>{value}</div>
-      {sub != null && <div className="mono text-[11px] text-muted">{sub}</div>}
+    <div className={cn("flex flex-col gap-1", className)}>
+      <span className="eyebrow">{label}</span>
+      <span className={cn("mono text-xl font-semibold leading-none", toneClass)}>{value}</span>
+      {sub != null && <span className="mono text-[11px] leading-tight text-muted">{sub}</span>}
     </div>
   );
 }

@@ -9,7 +9,7 @@ export function PanelHeader({ className, ...props }: React.HTMLAttributes<HTMLDi
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-2 border-b border-line px-3 py-2",
+        "flex items-center justify-between gap-2 border-b border-line px-3.5 py-2.5",
         className,
       )}
       {...props}
@@ -21,7 +21,7 @@ export function PanelTitle({ className, ...props }: React.HTMLAttributes<HTMLHea
   return (
     <h3
       className={cn(
-        "text-[11px] font-semibold uppercase tracking-[0.08em] text-muted",
+        "mono flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted",
         className,
       )}
       {...props}
@@ -30,5 +30,5 @@ export function PanelTitle({ className, ...props }: React.HTMLAttributes<HTMLHea
 }
 
 export function PanelBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("p-3", className)} {...props} />;
+  return <div className={cn("p-3.5", className)} {...props} />;
 }
