@@ -309,6 +309,39 @@ export interface ScreenerRow {
 }
 
 // ---------------------------------------------------------------------------
+// The Street — aggregated analyst models (sell-side dispersion)
+// ---------------------------------------------------------------------------
+
+export interface AnalystRatings {
+  strongBuy: number;
+  buy: number;
+  hold: number;
+  sell: number;
+  strongSell: number;
+}
+
+/**
+ * The aggregate of every covering analyst's model, as a dispersion rather than
+ * a single mean. This is the free tier (Yahoo): target range + counts + rating
+ * breakdown + next-period EPS estimate spread. Targets are a ~12-month horizon.
+ */
+export interface AnalystConsensus {
+  numAnalysts: number;
+  currentPrice: number;
+  targetLow: number;
+  targetMean: number;
+  targetMedian: number;
+  targetHigh: number;
+  ratings: AnalystRatings;
+  recommendationKey: string; // "strongBuy" | "buy" | "hold" | "sell" | "strongSell"
+  recommendationMean?: number; // 1 (strong buy) .. 5 (strong sell)
+  epsNext?: { period: string; avg: number; low: number; high: number; numAnalysts: number };
+  horizonMonths: number; // ~12
+  asOf: string;
+  delayed: boolean;
+}
+
+// ---------------------------------------------------------------------------
 // Provenance — every payload carries where it came from and how stale it is
 // ---------------------------------------------------------------------------
 

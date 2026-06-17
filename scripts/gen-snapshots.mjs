@@ -198,6 +198,38 @@ function buildFacts(cfg) {
   };
 }
 
+function buildStreet(cfg) {
+  const rnd = mulberry32(hash(cfg.ticker) + 99);
+  const spot = cfg.spot;
+  const drift = 0.04 + 0.11 * rnd(); // +4%..+15% mean upside over ~12mo (analysts skew bullish)
+  const mean = round2(spot * (1 + drift));
+  const spread = 0.13 + cfg.atmVol * 0.55; // disagreement widens with vol
+  const high = round2(mean * (1 + spread));
+  const low = round2(mean * (1 - spread * 0.85));
+  const median = round2(mean * (1 - (0.005 + 0.03 * rnd())));
+  const n = Math.round(22 + rnd() * 24);
+  let strongBuy = Math.round(n * (0.1 + 0.14 * rnd()));
+  let buy = Math.round(n * (0.3 + 0.15 * rnd()));
+  let hold = Math.round(n * (0.18 + 0.16 * rnd()));
+  let sell = Math.max(0, Math.round(n * (0.03 + 0.06 * rnd())));
+  let strongSell = Math.max(0, n - strongBuy - buy - hold - sell);
+  const recMean = (1 * strongBuy + 2 * buy + 3 * hold + 4 * sell + 5 * strongSell) / Math.max(n, 1);
+  const key = recMean < 1.5 ? "strongBuy" : recMean < 2.5 ? "buy" : recMean < 3.5 ? "hold" : recMean < 4.5 ? "sell" : "strongSell";
+  const epsAvg = round2(1.5 + 6 * rnd());
+  return {
+    numAnalysts: n,
+    targetLow: low,
+    targetMean: mean,
+    targetMedian: median,
+    targetHigh: high,
+    ratings: { strongBuy, buy, hold, sell, strongSell },
+    recommendationKey: key,
+    recommendationMean: round2(recMean),
+    epsNext: { period: "next-q", avg: epsAvg, low: round2(epsAvg * 0.93), high: round2(epsAvg * 1.08), numAnalysts: Math.round(n * 0.7) },
+    horizonMonths: 12,
+  };
+}
+
 // --- emit -----------------------------------------------------------------
 
 const index = [];
@@ -230,6 +262,7 @@ for (const cfg of UNIVERSE) {
         ? [{ type: "earnings", dteTarget: cfg.earningsDte, label: `${cfg.ticker} earnings`, confirmed: true }]
         : [],
     companyFacts: buildFacts(cfg),
+    street: buildStreet(cfg),
   };
   writeFileSync(join(OUT, `${cfg.ticker}.json`), JSON.stringify(bundle));
   index.push({ ticker: cfg.ticker, name: cfg.name, sector: cfg.sector, hero: cfg.hero });

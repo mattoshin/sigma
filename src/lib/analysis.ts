@@ -15,6 +15,7 @@ import { expectedMove } from "@/lib/quant/expectedMove";
 import { realizedVol } from "@/lib/quant/realizedVol";
 import { volRiskPremium } from "@/lib/quant/vrp";
 import type {
+  AnalystConsensus,
   Catalyst,
   CompanyFacts,
   Distribution,
@@ -58,6 +59,7 @@ export interface TickerAnalysis {
   history: PriceBar[];
   catalysts: Catalyst[];
   companyFacts: CompanyFacts | null;
+  analysts: AnalystConsensus | null;
   earningsDte: number | null;
 }
 
@@ -148,6 +150,7 @@ export async function buildTickerAnalysis(ticker: string): Promise<TickerAnalysi
     history: bundle.history.data,
     catalysts: bundle.catalysts,
     companyFacts: bundle.companyFacts,
+    analysts: bundle.analysts,
     earningsDte,
   };
 }

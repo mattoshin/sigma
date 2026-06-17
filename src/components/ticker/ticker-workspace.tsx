@@ -10,11 +10,12 @@ import { VolPanel } from "./vol-panel";
 import { AIPanel } from "./ai-panel";
 import { CompanyFactsPanel } from "./company-facts";
 import { TrackCallDialog } from "./track-call-dialog";
+import { StreetPanel } from "./street-panel";
 import { DistributionChart } from "@/components/charts/distribution-chart";
 import { PriceChart } from "@/components/charts/price-chart";
 import { nearestByPrice } from "@/components/charts/chart-utils";
 import { Panel, PanelBody, PanelHeader, PanelTitle } from "@/components/ui/panel";
-import { computeEdge, makeDefaultView, scenariosFromAI } from "@/lib/edge";
+import { computeEdge, makeDefaultView, makeViewFromStreet, scenariosFromAI } from "@/lib/edge";
 import type { TickerAnalysis } from "@/lib/analysis";
 import type { Scenario, SubjectiveView } from "@/lib/types";
 
@@ -151,6 +152,15 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
                 marketProbAbove={mktForwardProb}
               />
             </div>
+            {analysis.analysts && (
+              <StreetPanel
+                analysts={analysis.analysts}
+                spot={analysis.spot}
+                onSeed={() =>
+                  setView(makeViewFromStreet(analysis.ticker, expiry, analysis.spot, analysis.analysts!))
+                }
+              />
+            )}
             <AIPanel
               ticker={analysis.ticker}
               expiryIndex={expiryIdx}

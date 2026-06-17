@@ -13,9 +13,16 @@
  * export in a small typed facade covering just the fields we read.
  */
 
-import yahooFinance from "yahoo-finance2";
+import YahooFinance from "yahoo-finance2";
 import { DEFAULTS } from "@/lib/config";
-import type { OptionChain, OptionContract, OptionExpiry, PriceBar, Quote } from "@/lib/types";
+import type {
+  AnalystConsensus,
+  OptionChain,
+  OptionContract,
+  OptionExpiry,
+  PriceBar,
+  Quote,
+} from "@/lib/types";
 
 interface YQuote {
   symbol?: string;
@@ -56,19 +63,33 @@ interface YOptions {
   expirationDates?: Date[];
   options?: YOptExpiry[];
 }
+interface YQuoteSummary {
+  financialData?: {
+    currentPrice?: number;
+    targetLowPrice?: number;
+    targetMeanPrice?: number;
+    targetMedianPrice?: number;
+    targetHighPrice?: number;
+    numberOfAnalystOpinions?: number;
+    recommendationMean?: number;
+    recommendationKey?: string;
+  };
+  recommendationTrend?: { trend?: { period: string; strongBuy: number; buy: number; hold: number; sell: number; strongSell: number }[] };
+  earningsTrend?: {
+    trend?: {
+      period: string;
+      earningsEstimate?: { avg?: number; low?: number; high?: number; numberOfAnalysts?: number };
+    }[];
+  };
+}
 
-const yf = yahooFinance as unknown as {
+// yahoo-finance2 v3 must be instantiated (the default export is the class).
+const yf = new YahooFinance({ suppressNotices: ["yahooSurvey", "ripHistorical"] }) as unknown as {
   quote(symbol: string): Promise<YQuote>;
   chart(symbol: string, opts: { period1: Date; interval: string }): Promise<{ quotes: YBar[] }>;
   options(symbol: string, opts?: { date?: Date }): Promise<YOptions>;
-  suppressNotices?(keys: string[]): void;
+  quoteSummary(symbol: string, opts: { modules: string[] }): Promise<YQuoteSummary>;
 };
-
-try {
-  yf.suppressNotices?.(["yahooSurvey", "ripHistorical"]);
-} catch {
-  /* noop */
-}
 
 const MAX_LIVE_EXPIRIES = 4;
 
@@ -158,5 +179,36 @@ export async function getLiveChain(ticker: string): Promise<OptionChain> {
     riskFreeRate: DEFAULTS.riskFreeRate,
     dividendYield: divYield,
     expiries,
+  };
+}
+
+export async function getLiveAnalysts(ticker: string): Promise<AnalystConsensus | null> {
+  const r = await yf.quoteSummary(ticker, {
+    modules: ["financialData", "recommendationTrend", "earningsTrend"],
+  });
+  const fd = r.financialData;
+  if (!fd || fd.targetMeanPrice == null) return null;
+  const rt = r.recommendationTrend?.trend?.[0];
+  const et = r.earningsTrend?.trend?.find((t) => t.period === "+1q") ?? r.earningsTrend?.trend?.[0];
+  const ee = et?.earningsEstimate;
+  return {
+    numAnalysts: fd.numberOfAnalystOpinions ?? 0,
+    currentPrice: fd.currentPrice ?? 0,
+    targetLow: fd.targetLowPrice ?? 0,
+    targetMean: fd.targetMeanPrice ?? 0,
+    targetMedian: fd.targetMedianPrice ?? fd.targetMeanPrice ?? 0,
+    targetHigh: fd.targetHighPrice ?? 0,
+    ratings: rt
+      ? { strongBuy: rt.strongBuy, buy: rt.buy, hold: rt.hold, sell: rt.sell, strongSell: rt.strongSell }
+      : { strongBuy: 0, buy: 0, hold: 0, sell: 0, strongSell: 0 },
+    recommendationKey: fd.recommendationKey ?? "—",
+    recommendationMean: fd.recommendationMean,
+    epsNext:
+      ee && ee.avg != null
+        ? { period: et?.period ?? "next", avg: ee.avg, low: ee.low ?? ee.avg, high: ee.high ?? ee.avg, numAnalysts: ee.numberOfAnalysts ?? 0 }
+        : undefined,
+    horizonMonths: 12,
+    asOf: new Date().toISOString(),
+    delayed: true,
   };
 }

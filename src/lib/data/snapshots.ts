@@ -5,6 +5,7 @@
  */
 
 import type {
+  AnalystConsensus,
   Catalyst,
   CompanyFacts,
   OptionChain,
@@ -50,6 +51,18 @@ interface SnapshotTemplate {
     metrics: { label: string; value: number; unit: string; period: string }[];
     latestFilingsTemplate: { form: string; daysAgo: number; accession: string }[];
   };
+  street: {
+    numAnalysts: number;
+    targetLow: number;
+    targetMean: number;
+    targetMedian: number;
+    targetHigh: number;
+    ratings: { strongBuy: number; buy: number; hold: number; sell: number; strongSell: number };
+    recommendationKey: string;
+    recommendationMean: number;
+    epsNext: { period: string; avg: number; low: number; high: number; numAnalysts: number };
+    horizonMonths: number;
+  };
 }
 
 const TEMPLATES: Record<string, SnapshotTemplate> = {
@@ -69,6 +82,7 @@ export interface SnapshotBundle {
   history: PriceBar[];
   catalysts: Catalyst[];
   companyFacts: CompanyFacts;
+  analysts: AnalystConsensus;
   atmVol: number;
   earningsDte: number | null;
 }
@@ -159,12 +173,20 @@ export function loadSnapshot(ticker: string): SnapshotBundle | null {
     })),
   };
 
+  const analysts: AnalystConsensus = {
+    ...tpl.street,
+    currentPrice: tpl.spot,
+    asOf,
+    delayed: true,
+  };
+
   return {
     quote,
     chain,
     history,
     catalysts,
     companyFacts,
+    analysts,
     atmVol: tpl.atmVol,
     earningsDte: tpl.earningsDte,
   };

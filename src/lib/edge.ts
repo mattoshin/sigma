@@ -6,7 +6,7 @@
 
 import { subjectiveDistribution } from "@/lib/quant/subjective";
 import { analyzeEdge, divergence } from "@/lib/quant/ev";
-import type { Distribution, EdgeAnalysis, Scenario, SubjectiveView } from "@/lib/types";
+import type { AnalystConsensus, Distribution, EdgeAnalysis, Scenario, SubjectiveView } from "@/lib/types";
 import type { ExpiryAnalysis } from "@/lib/analysis";
 
 export interface EdgeBundle {
@@ -63,6 +63,46 @@ export function makeDefaultView(ticker: string, expiry: ExpiryAnalysis, spot: nu
 
 export function scenariosFromAI(scenarios: Scenario[]): Scenario[] {
   return scenarios.map((s) => ({ ...s, id: sid(), source: "ai" }));
+}
+
+/**
+ * Seed a view from the Street's analyst dispersion, scaled honestly to the
+ * selected expiry. Analyst targets are ~12-month, so we scale the implied drift
+ * linearly and the dispersion by sqrt(time) down to the expiry horizon, and tilt
+ * the probabilities by the buy/sell rating balance.
+ */
+export function makeViewFromStreet(
+  ticker: string,
+  expiry: ExpiryAnalysis,
+  spot: number,
+  street: AnalystConsensus,
+): SubjectiveView {
+  const yrFrac = Math.max(expiry.dte / 365, 1 / 365);
+  const ref = street.currentPrice > 0 ? street.currentPrice : spot;
+  const annualReturn = (street.targetMean - ref) / ref;
+  const base = spot * (1 + annualReturn * yrFrac);
+  const dispAnnual = (street.targetHigh - street.targetLow) / (2 * street.targetMean);
+  const dispH = dispAnnual * Math.sqrt(yrFrac);
+
+  const bullish = street.ratings.strongBuy + street.ratings.buy;
+  const bearish = street.ratings.sell + street.ratings.strongSell;
+  const baseP = 0.4;
+  const bullProb = Math.min(
+    0.6,
+    Math.max(0.1, ((1 - baseP) * (bullish + 1)) / (bullish + bearish + 2)),
+  );
+  const bearProb = round2(1 - baseP - bullProb);
+
+  return {
+    ticker,
+    horizon: expiry.expiry,
+    spreadMultiplier: 1,
+    scenarios: [
+      { id: sid(), label: "Bull", probability: bullProb, price: round2(base * (1 + dispH)), source: "user", rationale: `Street high $${street.targetHigh} scaled to ${expiry.dte}D` },
+      { id: sid(), label: "Base", probability: baseP, price: round2(base), source: "user", rationale: `Street mean $${street.targetMean} (${street.numAnalysts} analysts) scaled to ${expiry.dte}D` },
+      { id: sid(), label: "Bear", probability: bearProb, price: round2(base * (1 - dispH)), source: "user", rationale: `Street low $${street.targetLow} scaled to ${expiry.dte}D` },
+    ],
+  };
 }
 
 function round2(x: number): number {

@@ -9,9 +9,10 @@
 
 import { DEMO_SNAPSHOT_FIRST } from "@/lib/config";
 import { hasSnapshot, loadSnapshot, type SnapshotBundle } from "./snapshots";
-import { getLiveChain, getLiveHistory, getLiveQuote } from "./providers/yahoo";
+import { getLiveAnalysts, getLiveChain, getLiveHistory, getLiveQuote } from "./providers/yahoo";
 import { getCompanyFactsLive } from "./providers/edgar";
 import type {
+  AnalystConsensus,
   Catalyst,
   CompanyFacts,
   OptionChain,
@@ -35,6 +36,7 @@ export interface TickerBundle {
   history: WithProvenance<PriceBar[]>;
   catalysts: Catalyst[];
   companyFacts: CompanyFacts | null;
+  analysts: AnalystConsensus | null;
   /** Reference at-the-money vol from the snapshot, when available. */
   atmVol?: number;
   earningsDte?: number | null;
@@ -49,6 +51,7 @@ function bundleFromSnapshot(snap: SnapshotBundle, note?: string): TickerBundle {
     history: { data: snap.history, provenance: p },
     catalysts: snap.catalysts,
     companyFacts: snap.companyFacts,
+    analysts: snap.analysts,
     atmVol: snap.atmVol,
     earningsDte: snap.earningsDte,
   };
@@ -76,6 +79,12 @@ export async function getTickerBundle(ticker: string): Promise<TickerBundle> {
     } catch {
       /* keep snapshot facts */
     }
+    let analysts: AnalystConsensus | null = snap?.analysts ?? null;
+    try {
+      analysts = (await getLiveAnalysts(t)) ?? analysts;
+    } catch {
+      /* keep snapshot analysts */
+    }
     return {
       ticker: t,
       quote: { data: quote, provenance: liveProvenance() },
@@ -83,6 +92,7 @@ export async function getTickerBundle(ticker: string): Promise<TickerBundle> {
       history: { data: history, provenance: liveProvenance() },
       catalysts: snap?.catalysts ?? [],
       companyFacts,
+      analysts,
       atmVol: snap?.atmVol,
       earningsDte: snap?.earningsDte,
     };
