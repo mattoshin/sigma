@@ -12,6 +12,7 @@ import { CommandPalette } from "@/components/command-palette";
 const NAV = [
   { label: "Terminal", href: "/" },
   { label: "Screener", href: "/screener" },
+  { label: "Portfolio", href: "/portfolio" },
   { label: "Calibration", href: "/calibration" },
   { label: "Methodology", href: "/methodology" },
 ];
