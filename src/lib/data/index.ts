@@ -2,7 +2,7 @@
  * The hybrid data accessor.
  *
  * Demo-safe by default: any universe ticker resolves to its baked snapshot, so
- * a live interview demo cannot break on a flaky feed. Set SIGMA_FORCE_LIVE=1 to
+ * a live interview demo cannot break on a flaky feed. Set OSHIN_FORCE_LIVE=1 to
  * prefer live data for every ticker, with automatic snapshot fallback on error.
  * Either way, every payload carries provenance (source + as-of + delayed flag).
  */

@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 
-export const metadata = { title: "Methodology · Sigma" };
+export const metadata = { title: "Methodology · Oshin" };
 
 function Formula({ children }: { children: React.ReactNode }) {
   return (
@@ -33,7 +33,7 @@ export default function MethodologyPage() {
         <p>
           Every research tool ships a <em>number</em> where the honest answer is a{" "}
           <em>distribution</em>: a consensus mean, a price target, a single-scenario DCF. That is
-          the opposite of how a derivatives desk thinks. Sigma flips the unit of research from a
+          the opposite of how a derivatives desk thinks. Oshin flips the unit of research from a
           point estimate to a probability distribution, frames every view as expected value, and
           does the one thing fundamental tools don&apos;t: it puts the analyst&apos;s distribution
           and the options market&apos;s implied distribution on the same axis and quantifies the gap
@@ -156,10 +156,10 @@ Continuous:  f* = (μ − r) / σ²`}</Formula>
         <p>
           Option chains, quotes, and history come from a free/best-effort source (yahoo-finance2) with
           SEC EDGAR for filings and fundamentals. The demo runs on baked, internally-consistent
-          snapshots so it can&apos;t break live; flip <span className="mono">SIGMA_FORCE_LIVE=1</span>{" "}
+          snapshots so it can&apos;t break live; flip <span className="mono">OSHIN_FORCE_LIVE=1</span>{" "}
           to pull live chains for any ticker, with snapshot fallback on error. Everything is labeled
           delayed / illustrative. Honesty about data provenance is a feature, not a weakness — it
-          assumes you already have Bloomberg and proprietary analytics; Sigma adds the one reasoning
+          assumes you already have Bloomberg and proprietary analytics; Oshin adds the one reasoning
           layer those don&apos;t surface.
         </p>
         <p className="text-faint">

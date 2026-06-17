@@ -26,7 +26,7 @@ function ErrorView({ ticker, message }: { ticker: string; message: string }) {
       <h1 className="mono text-xl font-semibold text-fg">{ticker.toUpperCase()}</h1>
       <p className="mt-2 text-base text-muted">{message}</p>
       <p className="mt-4 text-[13px] text-faint">
-        Try one of the demo universe tickers, or set SIGMA_FORCE_LIVE=1 to pull live data.
+        Try one of the demo universe tickers, or set OSHIN_FORCE_LIVE=1 to pull live data.
       </p>
       <Link href="/" className="mt-4 inline-block text-sm text-info hover:underline">
         ← back to terminal

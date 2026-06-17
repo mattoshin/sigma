@@ -7,7 +7,7 @@ import { Stat } from "@/components/ui/misc";
 import { InfoHint } from "@/components/ui/tooltip";
 import { fmtPct } from "@/lib/format";
 
-export const metadata = { title: "Calibration · Sigma" };
+export const metadata = { title: "Calibration · Oshin" };
 
 // This page mutates via the resolve action, so render it dynamically.
 export const dynamic = "force-dynamic";

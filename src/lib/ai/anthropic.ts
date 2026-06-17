@@ -12,7 +12,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { AIScenarioResult, Scenario } from "@/lib/types";
 
-const MODEL = process.env.SIGMA_AI_MODEL ?? "claude-sonnet-4-6";
+const MODEL = process.env.OSHIN_AI_MODEL ?? "claude-sonnet-4-6";
 
 export interface ScenarioEngineInput {
   ticker: string;

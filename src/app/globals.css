@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 /*
- * Sigma — themed on @sandeep-jaiswar/ui (terminal-ui), a Bloomberg Terminal
+ * Oshin — themed on @sandeep-jaiswar/ui (terminal-ui), a Bloomberg Terminal
  * design system. True-black canvas, blue (#0068ff) primary, mint (#4af6c3) up,
  * red (#ff433d) down, orange (#fb8b1e) warning. Inter + SF Mono, sharp corners,
  * dense data with slightly wide tracking, terminal focus-glow.
  *
- * Sigma's own mapping: market-implied = blue (the brand), your view = orange,
+ * Oshin's own mapping: market-implied = blue (the brand), your view = orange,
  * so the two distributions stay distinct while we adopt the identity wholesale.
  */
 

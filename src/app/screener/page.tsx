@@ -3,7 +3,7 @@ import { ScreenerTable } from "@/components/screener-table";
 import { InfoHint } from "@/components/ui/tooltip";
 
 export const metadata = {
-  title: "Edge Screener · Sigma",
+  title: "Edge Screener · Oshin",
 };
 
 export default async function ScreenerPage() {
