@@ -67,13 +67,13 @@ export function HeroDistribution() {
       <line x1={px(0)} y1={top} x2={px(0)} y2={baseline} stroke="var(--info)" strokeWidth={1} strokeDasharray="4 4" opacity={0.7} />
 
       {/* labels */}
-      <text x={px(-2.1)} y={py(pdf(-1.4, 0, 1)) - 8} className="mono" fontSize={13} fill="var(--info)">
+      <text x={px(-2.1)} y={py(pdf(-1.4, 0, 1)) - 8} className="mono" fontSize={14} fill="var(--info)">
         market-implied (Q)
       </text>
-      <text x={px(0.9)} y={py(pdf(0.55, 0.55, 0.82)) - 8} className="mono" fontSize={13} fill="var(--warn)">
+      <text x={px(0.9)} y={py(pdf(0.55, 0.55, 0.82)) - 8} className="mono" fontSize={14} fill="var(--warn)">
         your view
       </text>
-      <text x={px(1.75)} y={baseline - 26} className="mono" fontSize={12} fill="var(--up)">
+      <text x={px(1.75)} y={baseline - 26} className="mono" fontSize={13} fill="var(--up)">
         edge ▸
       </text>
     </svg>

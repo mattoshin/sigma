@@ -18,7 +18,7 @@ export function TickerTape() {
           <Link
             key={i}
             href={`/t/${r.ticker}`}
-            className="flex items-center gap-2 whitespace-nowrap border-r border-line/70 px-4 py-1.5 text-[11px] transition-colors hover:bg-panel2"
+            className="flex items-center gap-2 whitespace-nowrap border-r border-line/70 px-4 py-1.5 text-[13px] transition-colors hover:bg-panel2"
             aria-hidden={i >= rows.length}
             tabIndex={i >= rows.length ? -1 : 0}
           >

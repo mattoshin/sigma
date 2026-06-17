@@ -55,7 +55,7 @@ export function ScenarioBuilder({
                   {s.label}
                 </Badge>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-faint">target</span>
+                  <span className="text-[12px] text-faint">target</span>
                   <Input
                     type="number"
                     value={s.price}
@@ -74,10 +74,10 @@ export function ScenarioBuilder({
                   onValueChange={([v]) => patch(s.id, { probability: v })}
                   className="flex-1"
                 />
-                <span className="mono w-12 text-right text-xs text-accent">{normPct.toFixed(0)}%</span>
+                <span className="mono w-12 text-right text-sm text-accent">{normPct.toFixed(0)}%</span>
               </div>
               {s.rationale && (
-                <p className="text-[10px] leading-snug text-faint">
+                <p className="text-[12px] leading-snug text-faint">
                   {s.source === "ai" && <span className="text-violet">AI · </span>}
                   {s.rationale}
                 </p>
@@ -88,10 +88,10 @@ export function ScenarioBuilder({
 
         <div className="border-t border-line pt-3">
           <div className="mb-1 flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-wider text-faint">
+            <span className="text-[12px] uppercase tracking-wider text-faint">
               Conviction (band width)
             </span>
-            <span className="mono text-xs text-muted">{view.spreadMultiplier.toFixed(2)}×</span>
+            <span className="mono text-sm text-muted">{view.spreadMultiplier.toFixed(2)}×</span>
           </div>
           <Slider
             value={[view.spreadMultiplier]}
@@ -100,7 +100,7 @@ export function ScenarioBuilder({
             step={0.05}
             onValueChange={([v]) => setView({ ...view, spreadMultiplier: v })}
           />
-          <p className="mt-1 text-[10px] text-faint">
+          <p className="mt-1 text-[12px] text-faint">
             Lower = tighter, more confident scenarios. Higher = wider error bars.
           </p>
         </div>

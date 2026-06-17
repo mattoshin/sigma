@@ -125,7 +125,7 @@ export function DistributionChart({
         {x.ticks(6).map((t) => (
           <g key={t}>
             <line x1={x(t)} x2={x(t)} y1={padT} y2={height - padB} stroke="var(--line)" strokeWidth={1} opacity={0.5} />
-            <text x={x(t)} y={height - padB + 14} textAnchor="middle" className="mono" fontSize={9} fill="var(--faint)">
+            <text x={x(t)} y={height - padB + 14} textAnchor="middle" className="mono" fontSize={11} fill="var(--faint)">
               {fmtMoney(t, 0)}
             </text>
           </g>
@@ -152,7 +152,7 @@ export function DistributionChart({
           s.price >= xMin && s.price <= xMax ? (
             <g key={i}>
               <line x1={x(s.price)} x2={x(s.price)} y1={height - padB - 6} y2={height - padB} stroke="var(--accent)" strokeWidth={1.5} />
-              <text x={x(s.price)} y={padT - 4} textAnchor="middle" className="mono" fontSize={8} fill="var(--accent)">
+              <text x={x(s.price)} y={padT - 4} textAnchor="middle" className="mono" fontSize={10} fill="var(--accent)">
                 {s.label[0]}
               </text>
             </g>
@@ -167,7 +167,7 @@ export function DistributionChart({
 
       {hover && (
         <div
-          className="pointer-events-none absolute top-1 rounded-sm border border-line2 bg-panel2 px-2 py-1 text-[10px] shadow-xl"
+          className="pointer-events-none absolute top-1 rounded-sm border border-line2 bg-panel2 px-2 py-1 text-[12px] shadow-xl"
           style={{ left: Math.min(Math.max(x(hover.price) - 60, 0), width - 130) }}
         >
           <div className="mono text-fg">{fmtMoney(hover.price)}</div>
@@ -202,7 +202,7 @@ function VLine({
   return (
     <g>
       <line x1={xPos} x2={xPos} y1={top} y2={bottom} stroke={color} strokeWidth={1} strokeDasharray={dash} />
-      <text x={xPos + 3} y={top + 8} className="mono" fontSize={8} fill={color}>
+      <text x={xPos + 3} y={top + 8} className="mono" fontSize={10} fill={color}>
         {label}
       </text>
     </g>

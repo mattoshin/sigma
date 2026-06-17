@@ -28,7 +28,7 @@ export default async function Home() {
               <br />
               <span className="text-accent">Sigma tells you the odds.</span>
             </h1>
-            <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-muted">
               Every research tool ships a point estimate where the honest answer is a distribution.
               Sigma puts your view and the options-implied distribution on one axis, quantifies the
               gap as expected value, sizes the bet with half-Kelly, and scores your calibration over
@@ -37,11 +37,11 @@ export default async function Home() {
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link
                 href="/t/SPY"
-                className="mono flex h-9 items-center gap-2 rounded-sm bg-accent px-4 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-accent-deep"
+                className="mono flex h-9 items-center gap-2 rounded-sm bg-accent px-4 text-sm font-semibold uppercase tracking-wider text-white transition-colors hover:bg-accent-deep"
               >
                 Open SPY <ArrowUpRight className="h-3.5 w-3.5" />
               </Link>
-              <span className="flex items-center gap-2 text-xs text-faint">
+              <span className="flex items-center gap-2 text-sm text-faint">
                 or <Kbd>⌘K</Kbd> for any ticker
               </span>
             </div>
@@ -51,7 +51,7 @@ export default async function Home() {
           <div className="rounded-md border border-line bg-panel/60">
             <div className="flex items-center justify-between border-b border-line px-3.5 py-2">
               <span className="eyebrow">SPY · 30d · implied vs view</span>
-              <span className="mono text-[10px] text-up">edge +3.1%</span>
+              <span className="mono text-[12px] text-up">edge +3.1%</span>
             </div>
             <div className="px-3 py-4">
               <HeroDistribution />
@@ -66,8 +66,8 @@ export default async function Home() {
           {MANIFESTO.map((m) => (
             <div key={m.k} className="border-b border-line p-5 last:border-b-0 sm:border-b-0">
               <div className="eyebrow text-accent">{m.k}</div>
-              <div className="display mt-2 text-base font-semibold text-fg">{m.t}</div>
-              <p className="mt-1.5 text-xs leading-snug text-muted">{m.d}</p>
+              <div className="display mt-2 text-lg font-semibold text-fg">{m.t}</div>
+              <p className="mt-1.5 text-sm leading-snug text-muted">{m.d}</p>
             </div>
           ))}
         </div>
@@ -77,12 +77,12 @@ export default async function Home() {
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="mb-2.5 flex items-baseline justify-between">
           <h2 className="eyebrow">Watchlist · implied vol &amp; expected move</h2>
-          <Link href="/screener" className="mono text-[11px] text-info hover:underline">
+          <Link href="/screener" className="mono text-[13px] text-info hover:underline">
             full edge screener →
           </Link>
         </div>
         <div className="overflow-hidden rounded-md border border-line">
-          <table className="w-full text-xs">
+          <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-line bg-panel">
                 {["Ticker", "Last", "Chg", "ATM IV", "RV 30d", "VRP", "Exp move", "Earnings"].map((h, i) => (

@@ -59,7 +59,7 @@ export function PriceChart({ bars, band }: Props) {
             {[band.upper, band.lower].map((v, i) => (
               <g key={i}>
                 <line x1={padL} x2={width - padR} y1={y(v)} y2={y(v)} stroke="var(--accent)" strokeWidth={1} strokeDasharray="3 3" opacity={0.6} />
-                <text x={width - padR + 3} y={y(v) + 3} className="mono" fontSize={9} fill="var(--accent)">
+                <text x={width - padR + 3} y={y(v) + 3} className="mono" fontSize={11} fill="var(--accent)">
                   {fmtMoney(v, 0)}
                 </text>
               </g>
@@ -71,7 +71,7 @@ export function PriceChart({ bars, band }: Props) {
         {y.ticks(4).map((t) => (
           <g key={t}>
             <line x1={padL} x2={width - padR} y1={y(t)} y2={y(t)} stroke="var(--line)" strokeWidth={1} opacity={0.4} />
-            <text x={width - padR + 3} y={y(t) + 3} className="mono" fontSize={9} fill="var(--faint)">
+            <text x={width - padR + 3} y={y(t) + 3} className="mono" fontSize={11} fill="var(--faint)">
               {fmtMoney(t, 0)}
             </text>
           </g>
@@ -82,7 +82,7 @@ export function PriceChart({ bars, band }: Props) {
         <circle cx={x(bars.length - 1)} cy={y(last)} r={2.5} fill={color} />
 
         {dateTicks.map((i) => (
-          <text key={i} x={x(i)} y={height - 6} textAnchor="middle" className="mono" fontSize={9} fill="var(--faint)">
+          <text key={i} x={x(i)} y={height - 6} textAnchor="middle" className="mono" fontSize={11} fill="var(--faint)">
             {fmtDateShort(bars[i].date)}
           </text>
         ))}

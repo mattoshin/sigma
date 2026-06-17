@@ -38,10 +38,10 @@ export function ReliabilityChart({ bins, height = 280 }: Props) {
           <g key={t}>
             <line x1={x(t)} x2={x(t)} y1={y(0)} y2={y(1)} stroke="var(--line)" strokeWidth={1} opacity={0.4} />
             <line x1={x(0)} x2={x(1)} y1={y(t)} y2={y(t)} stroke="var(--line)" strokeWidth={1} opacity={0.4} />
-            <text x={x(t)} y={y(0) + 14} textAnchor="middle" className="mono" fontSize={9} fill="var(--faint)">
+            <text x={x(t)} y={y(0) + 14} textAnchor="middle" className="mono" fontSize={11} fill="var(--faint)">
               {fmtPct(t, 0)}
             </text>
-            <text x={x(0) - 6} y={y(t) + 3} textAnchor="end" className="mono" fontSize={9} fill="var(--faint)">
+            <text x={x(0) - 6} y={y(t) + 3} textAnchor="end" className="mono" fontSize={11} fill="var(--faint)">
               {fmtPct(t, 0)}
             </text>
           </g>
@@ -75,7 +75,7 @@ export function ReliabilityChart({ bins, height = 280 }: Props) {
           />
         ))}
 
-        <text x={pad + side / 2} y={height - 4} textAnchor="middle" className="mono" fontSize={9} fill="var(--muted)">
+        <text x={pad + side / 2} y={height - 4} textAnchor="middle" className="mono" fontSize={11} fill="var(--muted)">
           predicted probability
         </text>
         <text
@@ -83,7 +83,7 @@ export function ReliabilityChart({ bins, height = 280 }: Props) {
           y={pad + side / 2}
           textAnchor="middle"
           className="mono"
-          fontSize={9}
+          fontSize={11}
           fill="var(--muted)"
           transform={`rotate(-90 12 ${pad + side / 2})`}
         >

@@ -17,7 +17,7 @@ export const TooltipContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 max-w-xs rounded-sm border border-line2 bg-panel2 px-2.5 py-1.5 text-[11px] leading-snug text-fg shadow-xl",
+        "z-50 max-w-xs rounded-sm border border-line2 bg-panel2 px-2.5 py-1.5 text-[13px] leading-snug text-fg shadow-xl",
         "data-[state=delayed-open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=delayed-open]:fade-in-0",
         className,
       )}
@@ -32,7 +32,7 @@ export function InfoHint({ children }: { children: React.ReactNode }) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <span className="mono inline-flex h-3.5 w-3.5 cursor-help items-center justify-center rounded-full border border-line text-[9px] text-faint hover:border-accent hover:text-accent">
+        <span className="mono inline-flex h-3.5 w-3.5 cursor-help items-center justify-center rounded-full border border-line text-[11px] text-faint hover:border-accent hover:text-accent">
           ?
         </span>
       </TooltipTrigger>

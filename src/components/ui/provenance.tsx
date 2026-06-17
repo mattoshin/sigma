@@ -17,7 +17,7 @@ export function DataTag({ delayed, className }: { delayed?: boolean; className?:
 
 export function ProvenanceLine({ provenance, className }: { provenance: Provenance; className?: string }) {
   return (
-    <div className={cn("mono flex items-center gap-2 text-[10px] text-faint", className)}>
+    <div className={cn("mono flex items-center gap-2 text-[12px] text-faint", className)}>
       <DataTag delayed={provenance.delayed} />
       <span>
         src: {provenance.source} · as of {new Date(provenance.asOf).toLocaleString("en-US")}

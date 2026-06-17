@@ -37,13 +37,13 @@ export function SmileChart({ smile, forward, height = 200 }: Props) {
         {y.ticks(4).map((t) => (
           <g key={t}>
             <line x1={padL} x2={width - padR} y1={y(t)} y2={y(t)} stroke="var(--line)" strokeWidth={1} opacity={0.4} />
-            <text x={padL - 4} y={y(t) + 3} textAnchor="end" className="mono" fontSize={9} fill="var(--faint)">
+            <text x={padL - 4} y={y(t) + 3} textAnchor="end" className="mono" fontSize={11} fill="var(--faint)">
               {fmtPct(t, 0)}
             </text>
           </g>
         ))}
         {x.ticks(5).map((t) => (
-          <text key={t} x={x(t)} y={height - 6} textAnchor="middle" className="mono" fontSize={9} fill="var(--faint)">
+          <text key={t} x={x(t)} y={height - 6} textAnchor="middle" className="mono" fontSize={11} fill="var(--faint)">
             {fmtMoney(t, 0)}
           </text>
         ))}

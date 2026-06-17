@@ -6,7 +6,7 @@ export function Kbd({ className, children }: { className?: string; children: Rea
   return (
     <kbd
       className={cn(
-        "mono inline-flex h-5 min-w-5 items-center justify-center rounded-sm border border-line2 bg-canvas px-1.5 text-[10px] text-muted",
+        "mono inline-flex h-5 min-w-5 items-center justify-center rounded-sm border border-line2 bg-canvas px-1.5 text-[12px] text-muted",
         className,
       )}
     >
@@ -49,8 +49,8 @@ export function Stat({
   return (
     <div className={cn("flex flex-col gap-1", className)}>
       <span className="eyebrow">{label}</span>
-      <span className={cn("mono text-xl font-semibold leading-none", toneClass)}>{value}</span>
-      {sub != null && <span className="mono text-[11px] leading-tight text-muted">{sub}</span>}
+      <span className={cn("mono text-2xl font-bold leading-none tracking-tight", toneClass)}>{value}</span>
+      {sub != null && <span className="mono text-[13px] leading-tight text-muted">{sub}</span>}
     </div>
   );
 }

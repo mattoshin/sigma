@@ -38,7 +38,7 @@ export default async function CalibrationPage() {
           measured.
         </InfoHint>
       </div>
-      <p className="mb-6 max-w-2xl text-xs leading-relaxed text-muted">
+      <p className="mb-6 max-w-2xl text-sm leading-relaxed text-muted">
         When you say 60%, does it happen ~60% of the time? Brier score measures that (0 is perfect,
         0.25 is a coin flip answered &quot;50%&quot;). Seeded here with historical resolved calls;
         log your own from any ticker&apos;s studio.
@@ -80,7 +80,7 @@ export default async function CalibrationPage() {
         <Panel>
           <PanelHeader>
             <PanelTitle>Reliability diagram</PanelTitle>
-            <span className="text-[10px] text-faint">below diagonal = overconfident</span>
+            <span className="text-[12px] text-faint">below diagonal = overconfident</span>
           </PanelHeader>
           <PanelBody>
             <ReliabilityChart bins={cal.bins} />

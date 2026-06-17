@@ -27,9 +27,9 @@ export function VolPanel({ analysis, expiry }: { analysis: TickerAnalysis; expir
           <Stat label="Realized 30d" value={fmtPct(vrp.realizedVol30, 1)} />
           <Stat label="VRP (IV − RV)" value={`${vrp.vrp >= 0 ? "+" : ""}${(vrp.vrp * 100).toFixed(1)} pts`} tone={vrpTone} />
         </div>
-        <p className="text-[11px] leading-snug text-muted">{vrp.note}</p>
+        <p className="text-[13px] leading-snug text-muted">{vrp.note}</p>
         <div>
-          <div className="mb-1 text-[10px] uppercase tracking-wider text-faint">
+          <div className="mb-1 text-[12px] uppercase tracking-wider text-faint">
             Implied-vol smile · {expiry.expiry}
           </div>
           <SmileChart smile={expiry.smile} forward={expiry.forward} height={170} />

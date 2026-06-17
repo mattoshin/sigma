@@ -21,7 +21,7 @@ export function PanelTitle({ className, ...props }: React.HTMLAttributes<HTMLHea
   return (
     <h3
       className={cn(
-        "mono flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted",
+        "mono flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.1em] text-muted",
         className,
       )}
       {...props}

@@ -23,11 +23,11 @@ export function TickerHeader({ analysis }: { analysis: TickerAnalysis }) {
               </h1>
               <Badge variant="outline">{analysis.sector}</Badge>
             </div>
-            <div className="mt-1.5 text-xs text-muted">{analysis.name}</div>
+            <div className="mt-1.5 text-sm text-muted">{analysis.name}</div>
           </div>
           <div className="flex items-baseline gap-2.5">
             <span className="mono text-3xl font-semibold leading-none text-fg">{fmtMoney(q.price)}</span>
-            <span className={`mono text-sm ${toneClass}`}>
+            <span className={`mono text-base ${toneClass}`}>
               {fmtSigned(q.change)} ({fmtSignedPct(q.changePct)})
             </span>
           </div>
@@ -40,18 +40,18 @@ export function TickerHeader({ analysis }: { analysis: TickerAnalysis }) {
               <span className="eyebrow flex items-center gap-1.5">
                 <StatusDot tone="warn" live /> Earnings
               </span>
-              <span className="mono text-sm font-medium text-warn">{dte}d</span>
+              <span className="mono text-base font-medium text-warn">{dte}d</span>
             </div>
           )}
           <div className="flex flex-col gap-1">
             <span className="eyebrow">ATM IV</span>
-            <span className="mono text-sm font-medium text-accent">
+            <span className="mono text-base font-medium text-accent">
               {fmtPct(analysis.expiries[0]?.atmIV ?? 0, 1)}
             </span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="eyebrow">VRP</span>
-            <span className={`mono text-sm font-medium ${analysis.vrp.vrp >= 0 ? "text-up" : "text-down"}`}>
+            <span className={`mono text-base font-medium ${analysis.vrp.vrp >= 0 ? "text-up" : "text-down"}`}>
               {analysis.vrp.vrp >= 0 ? "+" : ""}
               {(analysis.vrp.vrp * 100).toFixed(1)}
             </span>

@@ -37,9 +37,9 @@ export function ScreenerTable({ rows }: { rows: ScreenerRowFull[] }) {
 
   return (
     <div className="overflow-hidden rounded-md border border-line">
-      <table className="w-full text-xs">
+      <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-line bg-panel text-[10px] uppercase tracking-wide text-faint">
+          <tr className="border-b border-line bg-panel text-[12px] uppercase tracking-wide text-faint">
             <th className="px-3 py-2 text-left font-medium">Ticker</th>
             {COLS.map((c) => (
               <th key={c.key} className="px-3 py-2 text-right font-medium">

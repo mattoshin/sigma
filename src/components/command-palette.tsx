@@ -40,11 +40,11 @@ export function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: 
           value={search}
           onValueChange={setSearch}
           placeholder="Type a ticker (e.g. AAPL) or a command…"
-          className="mono h-11 w-full bg-transparent text-sm text-fg outline-none placeholder:text-faint"
+          className="mono h-11 w-full bg-transparent text-base text-fg outline-none placeholder:text-faint"
         />
       </div>
       <Command.List className="max-h-[340px] overflow-y-auto p-1.5">
-        <Command.Empty className="px-3 py-6 text-center text-xs text-faint">
+        <Command.Empty className="px-3 py-6 text-center text-sm text-faint">
           No matches. Type any ticker symbol to open it live.
         </Command.Empty>
 
@@ -62,7 +62,7 @@ export function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: 
             <Item key={u.ticker} value={`${u.ticker} ${u.name}`} onSelect={() => go(`/t/${u.ticker}`)} icon={TrendingUp}>
               <span className="mono w-14 text-fg">{u.ticker}</span>
               <span className="text-muted">{u.name}</span>
-              <span className="ml-auto text-[10px] text-faint">{u.sector}</span>
+              <span className="ml-auto text-[12px] text-faint">{u.sector}</span>
             </Item>
           ))}
         </Command.Group>
@@ -94,7 +94,7 @@ function Item({
     <Command.Item
       value={value}
       onSelect={onSelect}
-      className="flex cursor-pointer items-center gap-2 rounded-sm px-2.5 py-2 text-xs text-muted data-[selected=true]:bg-panel2 data-[selected=true]:text-fg"
+      className="flex cursor-pointer items-center gap-2 rounded-sm px-2.5 py-2 text-sm text-muted data-[selected=true]:bg-panel2 data-[selected=true]:text-fg"
     >
       <Icon className="h-3.5 w-3.5 shrink-0 text-faint" />
       {children}

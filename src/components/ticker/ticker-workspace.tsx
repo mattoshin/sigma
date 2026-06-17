@@ -55,13 +55,13 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
       <div className="space-y-4 p-4">
         {/* expiry selector */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[10px] uppercase tracking-wider text-faint">Expiry</span>
+          <span className="text-[12px] uppercase tracking-wider text-faint">Expiry</span>
           {analysis.expiries.map((e, i) => (
             <button
               key={e.expiry}
               onClick={() => setExpiryIdx(i)}
               className={cn(
-                "mono rounded-sm border px-2.5 py-1 text-xs transition-colors",
+                "mono rounded-sm border px-2.5 py-1 text-sm transition-colors",
                 i === expiryIdx
                   ? "border-accent bg-accent/10 text-accent"
                   : "border-line text-muted hover:text-fg",
@@ -81,7 +81,7 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
             <Panel>
               <PanelHeader>
                 <PanelTitle>Your view vs the market — where the edge lives</PanelTitle>
-                <div className="flex items-center gap-3 text-[10px] text-muted">
+                <div className="flex items-center gap-3 text-[12px] text-muted">
                   <span className="flex items-center gap-1">
                     <i className="inline-block h-1.5 w-3 bg-info" /> implied (Q)
                   </span>
@@ -100,9 +100,9 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
                   band={{ lower: expiry.expectedMove.lower, upper: expiry.expectedMove.upper }}
                 />
                 {expiry.warnings.length > 0 && (
-                  <p className="mt-1 text-[10px] text-warn">⚠ {expiry.warnings.join(" · ")}</p>
+                  <p className="mt-1 text-[12px] text-warn">⚠ {expiry.warnings.join(" · ")}</p>
                 )}
-                <p className="mt-2 text-[11px] leading-snug text-muted">
+                <p className="mt-2 text-[13px] leading-snug text-muted">
                   Hover to read the market&apos;s odds vs your odds at any price. Green = you assign
                   more probability than the market is pricing; red = less.{" "}
                   <span className="text-faint">

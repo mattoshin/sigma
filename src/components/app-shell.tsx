@@ -39,7 +39,7 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
             {/* wordmark */}
             <Link href="/" className="flex items-baseline gap-2">
               <span className="mono text-xl font-semibold leading-none text-accent">Σ</span>
-              <span className="mono text-sm font-semibold tracking-[0.22em] text-fg">SIGMA</span>
+              <span className="mono text-base font-semibold tracking-[0.22em] text-fg">SIGMA</span>
               <span className="eyebrow ml-1 hidden md:inline">distributions · ev · edge</span>
             </Link>
 
@@ -53,7 +53,7 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
                     key={n.href}
                     href={n.href}
                     className={cn(
-                      "mono relative px-3 py-3.5 text-[11px] uppercase tracking-wider transition-colors",
+                      "mono relative px-3 py-3.5 text-[13px] uppercase tracking-wider transition-colors",
                       active ? "text-accent" : "text-muted hover:text-fg",
                     )}
                   >
@@ -67,7 +67,7 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
             <div className="ml-auto flex items-center gap-2">
               <button
                 onClick={() => setOpen(true)}
-                className="flex h-7 items-center gap-2 rounded-sm border border-line bg-panel2 px-2.5 text-xs text-faint transition-colors hover:border-line2 hover:text-muted"
+                className="flex h-7 items-center gap-2 rounded-sm border border-line bg-panel2 px-2.5 text-sm text-faint transition-colors hover:border-line2 hover:text-muted"
               >
                 <Search className="h-3.5 w-3.5" />
                 <span className="mono hidden sm:inline">ticker</span>
@@ -78,7 +78,7 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="mono flex items-center gap-1.5 rounded-sm border border-warn/30 bg-warn/5 px-2 py-1 text-[10px] uppercase tracking-wider text-warn">
+                  <span className="mono flex items-center gap-1.5 rounded-sm border border-warn/30 bg-warn/5 px-2 py-1 text-[12px] uppercase tracking-wider text-warn">
                     <StatusDot tone="warn" live />
                     Demo
                   </span>

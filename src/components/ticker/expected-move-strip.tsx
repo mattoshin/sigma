@@ -28,7 +28,7 @@ export function ExpectedMoveStrip({ expiry }: { expiry: ExpiryAnalysis }) {
         )}
       </div>
 
-      <div className="flex items-center gap-2 border-t border-line px-4 py-2 text-[11px] text-muted">
+      <div className="flex items-center gap-2 border-t border-line px-4 py-2 text-[13px] text-muted">
         {em.isEarningsExpiry && <Badge variant="down">Earnings inside</Badge>}
         <span className="mono">
           Market is pricing <span className="text-accent">±{fmtPct(em.movePct, 1)}</span> into{" "}

@@ -4,7 +4,7 @@ export const metadata = { title: "Methodology · Sigma" };
 
 function Formula({ children }: { children: React.ReactNode }) {
   return (
-    <pre className="mono my-2 overflow-x-auto rounded-sm border border-line bg-panel2 px-3 py-2 text-[11px] text-fg">
+    <pre className="mono my-2 overflow-x-auto rounded-sm border border-line bg-panel2 px-3 py-2 text-[13px] text-fg">
       {children}
     </pre>
   );
@@ -13,8 +13,8 @@ function Formula({ children }: { children: React.ReactNode }) {
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
     <section id={id} className="scroll-mt-16 border-t border-line py-6">
-      <h2 className="text-sm font-semibold uppercase tracking-[0.08em] text-accent">{title}</h2>
-      <div className="mt-3 space-y-3 text-xs leading-relaxed text-muted">{children}</div>
+      <h2 className="text-base font-semibold uppercase tracking-[0.08em] text-accent">{title}</h2>
+      <div className="mt-3 space-y-3 text-sm leading-relaxed text-muted">{children}</div>
     </section>
   );
 }
@@ -23,7 +23,7 @@ export default function MethodologyPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-8">
       <h1 className="text-xl font-semibold text-fg">Methodology</h1>
-      <p className="mt-2 text-xs leading-relaxed text-muted">
+      <p className="mt-2 text-sm leading-relaxed text-muted">
         Every number on this terminal is defensible. This page walks the math the way you&apos;d
         defend it to a quant: the risk-neutral density, the expected move, the edge, the
         non-negotiable risk-neutral-vs-real-world distinction, sizing, and calibration.

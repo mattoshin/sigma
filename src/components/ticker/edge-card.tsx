@@ -23,7 +23,7 @@ export function EdgeCard({ edge }: { edge: EdgeAnalysis }) {
       </PanelHeader>
       <PanelBody className="space-y-3">
         {/* headline EV sentence */}
-        <p className="text-xs leading-relaxed text-muted">
+        <p className="text-sm leading-relaxed text-muted">
           Market&apos;s expected price is{" "}
           <span className="mono text-info">{fmtMoney(ev.forward)}</span> (the risk-neutral forward).
           Your view implies <span className="mono text-accent">{fmtMoney(ev.expectedPrice)}</span> —{" "}
@@ -37,9 +37,9 @@ export function EdgeCard({ edge }: { edge: EdgeAnalysis }) {
 
         {/* strategies table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-xs">
+          <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-line text-[10px] uppercase tracking-wide text-faint">
+              <tr className="border-b border-line text-[12px] uppercase tracking-wide text-faint">
                 <th className="py-1.5 text-left font-medium">Structure</th>
                 <th className="py-1.5 text-right font-medium">Cost</th>
                 <th className="py-1.5 text-right font-medium">EV</th>
@@ -55,7 +55,7 @@ export function EdgeCard({ edge }: { edge: EdgeAnalysis }) {
                   <tr key={s.label} className="border-b border-line/60">
                     <td className="py-1.5 text-left text-fg">
                       {s.label}
-                      {isBest && <span className="ml-1.5 text-[9px] text-accent">◆ best</span>}
+                      {isBest && <span className="ml-1.5 text-[11px] text-accent">◆ best</span>}
                     </td>
                     <td className="py-1.5 text-right text-muted">{fmtMoney(s.marketPrice)}</td>
                     <td className="py-1.5 text-right text-muted">{fmtMoney(s.evUnderSubjective)}</td>
@@ -73,7 +73,7 @@ export function EdgeCard({ edge }: { edge: EdgeAnalysis }) {
         {/* kelly sizing */}
         <div className="rounded-sm border border-line bg-panel2 px-3 py-2">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1 text-[10px] uppercase tracking-wide text-faint">
+            <span className="flex items-center gap-1 text-[12px] uppercase tracking-wide text-faint">
               Half-Kelly size
               <InfoHint>
                 f* = (b·p − q)/b, halved to absorb estimation error. Full Kelly assumes your
@@ -84,7 +84,7 @@ export function EdgeCard({ edge }: { edge: EdgeAnalysis }) {
               {edge.kelly.halfKelly > 0 ? fmtPct(edge.kelly.halfKelly, 1) : "no bet"}
             </Badge>
           </div>
-          <p className="mt-1 text-[10px] leading-snug text-muted">{edge.kelly.note}</p>
+          <p className="mt-1 text-[12px] leading-snug text-muted">{edge.kelly.note}</p>
         </div>
       </PanelBody>
     </Panel>
