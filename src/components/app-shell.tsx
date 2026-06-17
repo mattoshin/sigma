@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Eye, Search } from "lucide-react";
+import { Eye, Moon, Search, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Kbd, StatusDot } from "@/components/ui/misc";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
@@ -76,6 +76,8 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
                 <Kbd className="ml-auto">⌘K</Kbd>
               </button>
 
+              <ThemeToggle />
+
               <ColorblindToggle />
 
               <Tooltip>
@@ -127,18 +129,46 @@ function ColorblindToggle() {
       <TooltipTrigger asChild>
         <button
           onClick={toggle}
+          aria-label="Toggle colorblind-safe palette"
           className={cn(
-            "flex h-7 w-7 items-center justify-center rounded-sm border border-line transition-colors hover:border-line2",
-            on ? "text-info" : "text-faint",
+            "flex h-9 w-9 items-center justify-center rounded-md border border-line2 transition-colors hover:border-accent/60",
+            on ? "text-info" : "text-muted hover:text-fg",
           )}
         >
-          <Eye className="h-3.5 w-3.5" />
+          <Eye className="h-4 w-4" />
         </button>
       </TooltipTrigger>
       <TooltipContent>
         Colorblind-safe palette (blue/orange){on ? " · on" : " · off"}. ~8% of men have red/green
         deficiency; a real terminal ships this.
       </TooltipContent>
+    </Tooltip>
+  );
+}
+
+function ThemeToggle() {
+  const [light, setLight] = React.useState(false);
+  React.useEffect(() => {
+    setLight(document.documentElement.classList.contains("light"));
+  }, []);
+  const toggle = () => {
+    const next = !light;
+    setLight(next);
+    document.documentElement.classList.toggle("light", next);
+    localStorage.setItem("oshin-theme", next ? "light" : "dark");
+  };
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={toggle}
+          aria-label="Toggle light or dark theme"
+          className="flex h-9 w-9 items-center justify-center rounded-md border border-line2 text-muted transition-colors hover:border-accent/60 hover:text-fg"
+        >
+          {light ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>{light ? "Switch to dark" : "Switch to light"}</TooltipContent>
     </Tooltip>
   );
 }

@@ -21,6 +21,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={`${inter.variable} h-full`}>
       <body className="min-h-full">
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{if(localStorage.getItem('oshin-theme')==='light')document.documentElement.classList.add('light');if(localStorage.getItem('sigma-cb')==='1')document.documentElement.classList.add('cb-safe');}catch(e){}})();",
+          }}
+        />
         <AppShell tape={<TickerTape />}>{children}</AppShell>
       </body>
     </html>

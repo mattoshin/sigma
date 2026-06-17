@@ -40,6 +40,33 @@ html.cb-safe {
   --down: #fb8b1e;
 }
 
+/* Light "paper" theme, toggled on <html>. Dark stays the default. */
+html.light {
+  --canvas: #f4f1ea;
+  --panel: #fbf9f3;
+  --panel2: #efe9dc;
+  --raised: #e7e0d0;
+  --line: #ddd5c4;
+  --line2: #c9bfa8;
+  --fg: #232020;
+  --muted: #5f584c;
+  --faint: #8c8472;
+  --accent: #0b5bd6;
+  --accent-deep: #08409c;
+  --up: #1f8a4c;
+  --down: #c0392b;
+  --warn: #b06d0a;
+  --info: #0b5bd6;
+  --violet: #6a4fc0;
+}
+html.light .shadow-card {
+  box-shadow: 0 1px 3px rgba(40, 35, 25, 0.08), 0 1px 2px rgba(40, 35, 25, 0.05);
+}
+html.light.cb-safe {
+  --up: #0b5bd6;
+  --down: #b06d0a;
+}
+
 @theme inline {
   --color-canvas: var(--canvas);
   --color-panel: var(--panel);
