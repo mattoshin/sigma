@@ -139,7 +139,7 @@ export function DistributionChart({
 
         {/* curves */}
         <path d={rndLine(merged) ?? ""} fill="none" stroke="var(--info)" strokeWidth={1.75} />
-        {subjective && <path d={subjLine(merged) ?? ""} fill="none" stroke="var(--accent)" strokeWidth={1.75} />}
+        {subjective && <path d={subjLine(merged) ?? ""} fill="none" stroke="var(--warn)" strokeWidth={1.75} />}
 
         {/* forward + spot markers */}
         <VLine xPos={x(forward)} top={padT} bottom={height - padB} color="var(--info)" dash="4 3" label="F" />
@@ -172,7 +172,7 @@ export function DistributionChart({
         >
           <div className="mono text-fg">{fmtMoney(hover.price)}</div>
           <div className="mono text-info">mkt P(&gt;) {fmtPct(1 - hover.rCdf, 0)}</div>
-          {subjective && <div className="mono text-accent">you P(&gt;) {fmtPct(1 - hover.sCdf, 0)}</div>}
+          {subjective && <div className="mono text-warn">you P(&gt;) {fmtPct(1 - hover.sCdf, 0)}</div>}
           {subjective && (
             <div className="mono" style={{ color: 1 - hover.sCdf >= 1 - hover.rCdf ? "var(--up)" : "var(--down)" }}>
               edge {fmtPct(hover.rCdf - hover.sCdf, 0)}

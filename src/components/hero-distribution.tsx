@@ -61,7 +61,7 @@ export function HeroDistribution() {
 
       {/* curves */}
       <polyline points={line(market)} fill="none" stroke="var(--info)" strokeWidth={2} />
-      <polyline points={line(view)} fill="none" stroke="var(--accent)" strokeWidth={2} />
+      <polyline points={line(view)} fill="none" stroke="var(--warn)" strokeWidth={2} />
 
       {/* forward marker */}
       <line x1={px(0)} y1={top} x2={px(0)} y2={baseline} stroke="var(--info)" strokeWidth={1} strokeDasharray="4 4" opacity={0.7} />
@@ -70,7 +70,7 @@ export function HeroDistribution() {
       <text x={px(-2.1)} y={py(pdf(-1.4, 0, 1)) - 8} className="mono" fontSize={13} fill="var(--info)">
         market-implied (Q)
       </text>
-      <text x={px(0.9)} y={py(pdf(0.55, 0.55, 0.82)) - 8} className="mono" fontSize={13} fill="var(--accent)">
+      <text x={px(0.9)} y={py(pdf(0.55, 0.55, 0.82)) - 8} className="mono" fontSize={13} fill="var(--warn)">
         your view
       </text>
       <text x={px(1.75)} y={baseline - 26} className="mono" fontSize={12} fill="var(--up)">

@@ -1,43 +1,43 @@
 @import "tailwindcss";
 
 /*
- * Sigma terminal theme — "instrument, not dashboard".
+ * Sigma — themed on @sandeep-jaiswar/ui (terminal-ui), a Bloomberg Terminal
+ * design system. True-black canvas, blue (#0068ff) primary, mint (#4af6c3) up,
+ * red (#ff433d) down, orange (#fb8b1e) warning. Inter + SF Mono, sharp corners,
+ * dense data with slightly wide tracking, terminal focus-glow.
  *
- * Sharp corners, hairline rules, elevation by background-step rather than
- * boxing everything. Space Grotesk carries display/body; IBM Plex Mono carries
- * every number, ticker, and structural label. Color is meaning: amber is the
- * signature/active state (the terminal nod), mint/coral are up/down only,
- * azure is the market (implied), violet is the model. Numbers render tabular.
+ * Sigma's own mapping: market-implied = blue (the brand), your view = orange,
+ * so the two distributions stay distinct while we adopt the identity wholesale.
  */
 
 :root {
-  /* Surfaces — a cool ink, lifted in steps not borders */
-  --canvas: #06070a;
-  --panel: #0c0e13;
-  --panel2: #12151c;
-  --raised: #171b23;
-  --line: #1b1f28;
-  --line2: #2a2f3a;
+  /* Surfaces — terminal black with gray steps */
+  --canvas: #000000;
+  --panel: #0e0e0e;
+  --panel2: #1a1a1a;
+  --raised: #262626;
+  --line: #2a2a2a;
+  --line2: #3a3a3a;
 
-  /* Text — brighter primary for real contrast */
-  --fg: #f4f6fa;
-  --muted: #9ba3b0;
-  --faint: #5a626f;
+  /* Text */
+  --fg: #ffffff;
+  --muted: #8b8b8b;
+  --faint: #5a5a5a;
 
-  /* Signal */
-  --up: #29d39e;
-  --down: #ff5664;
-  --accent: #ffb020; /* signature amber */
-  --accent-deep: #c77f00;
-  --info: #5aa2ff; /* market / implied */
-  --warn: #ffcb47;
-  --violet: #a98bff; /* model / AI */
+  /* Brand + signal (terminal-ui tokens) */
+  --accent: #0068ff; /* primary blue */
+  --accent-deep: #0052cc;
+  --up: #4af6c3; /* success mint */
+  --down: #ff433d; /* danger red */
+  --warn: #fb8b1e; /* warning orange — also "your view" in charts */
+  --info: #0068ff; /* market-implied = brand blue */
+  --violet: #4d93ff; /* model / AI = light blue */
 }
 
 /* Colorblind-safe: blue (up) / orange (down). */
 html.cb-safe {
-  --up: #5aa2ff;
-  --down: #ff9e2c;
+  --up: #4d93ff;
+  --down: #fb8b1e;
 }
 
 @theme inline {
@@ -58,13 +58,13 @@ html.cb-safe {
   --color-warn: var(--warn);
   --color-violet: var(--violet);
 
-  --font-sans: var(--font-display), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-mono-ibm), ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: var(--font-inter), "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", "Monaco", "Inconsolata", "Consolas", ui-monospace, monospace;
 
-  /* Sharp — an instrument, not a card UI */
+  /* Sharp, professional terminal corners */
   --radius-sm: 2px;
-  --radius-md: 3px;
-  --radius-lg: 4px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
 }
 
 * {
@@ -81,6 +81,7 @@ body {
   color: var(--fg);
   font-family: var(--font-sans);
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -101,36 +102,43 @@ body {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 30%, transparent);
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
 /* Data type — every number, ticker, structural label */
 .mono {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.display {
+  font-family: var(--font-sans);
   letter-spacing: -0.01em;
 }
 
-/* Display headlines: tight, confident */
-.display {
-  font-family: var(--font-sans);
-  letter-spacing: -0.02em;
-}
-
-/* Eyebrow / structural label — the one repeated structural device */
+/* Eyebrow / structural label */
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--faint);
 }
 
-/* The distribution motif — a faint bell curve used as a structural backdrop */
+/* Terminal focus-glow (from terminal-ui shadow tokens) */
+.glow-accent {
+  box-shadow: 0 0 0 3px rgba(0, 104, 255, 0.2);
+}
+.shadow-card {
+  box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+}
+
+/* Distribution motif backdrop — blue glow */
 .curve-bg {
   background-image: radial-gradient(
     120% 90% at 50% 100%,
-    color-mix(in srgb, var(--accent) 8%, transparent) 0%,
+    color-mix(in srgb, var(--accent) 9%, transparent) 0%,
     transparent 60%
   );
 }
@@ -141,7 +149,7 @@ body {
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 32px 32px;
   background-position: center;
-  opacity: 0.25;
+  opacity: 0.3;
 }
 
 @keyframes pulse-dot {
@@ -152,7 +160,6 @@ body {
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
-/* Ticker tape marquee (content is duplicated for a seamless loop) */
 @keyframes tape {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }

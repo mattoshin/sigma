@@ -10,12 +10,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-panel2 text-fg border border-line hover:border-line2 hover:bg-line2/40",
-        accent: "bg-accent/15 text-accent border border-accent/40 hover:bg-accent/25",
+        default: "bg-panel2 text-fg border border-line hover:border-line2 hover:bg-raised",
+        accent: "bg-accent text-white border border-accent hover:bg-accent-deep",
         ghost: "text-muted hover:text-fg hover:bg-panel2",
         outline: "border border-line text-fg hover:bg-panel2",
-        up: "bg-up/15 text-up border border-up/40 hover:bg-up/25",
-        down: "bg-down/15 text-down border border-down/40 hover:bg-down/25",
+        up: "bg-up text-canvas border border-up hover:opacity-90",
+        down: "bg-down text-white border border-down hover:opacity-90",
       },
       size: {
         sm: "h-7 px-2.5",

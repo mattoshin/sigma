@@ -86,7 +86,7 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
                     <i className="inline-block h-1.5 w-3 bg-info" /> implied (Q)
                   </span>
                   <span className="flex items-center gap-1">
-                    <i className="inline-block h-1.5 w-3 bg-accent" /> your view
+                    <i className="inline-block h-1.5 w-3 bg-warn" /> your view
                   </span>
                 </div>
               </PanelHeader>

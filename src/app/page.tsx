@@ -37,7 +37,7 @@ export default async function Home() {
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link
                 href="/t/SPY"
-                className="mono flex h-9 items-center gap-2 rounded-sm bg-accent px-4 text-xs font-semibold uppercase tracking-wider text-canvas transition-colors hover:bg-accent/90"
+                className="mono flex h-9 items-center gap-2 rounded-sm bg-accent px-4 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-accent-deep"
               >
                 Open SPY <ArrowUpRight className="h-3.5 w-3.5" />
               </Link>
