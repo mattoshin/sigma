@@ -14,7 +14,7 @@ interface Props {
 
 export function PriceChart({ bars, band }: Props) {
   const [ref, width] = useChartWidth();
-  const height = Math.round(Math.min(240, Math.max(160, width * 0.2)));
+  const height = Math.round(Math.min(300, Math.max(170, width * 0.18)));
   const padL = 8;
   const padR = 48;
   const padT = 12;

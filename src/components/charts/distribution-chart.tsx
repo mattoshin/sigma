@@ -39,8 +39,8 @@ export function DistributionChart({
 }: Props) {
   const [ref, width] = useChartWidth();
   const [hoverX, setHoverX] = React.useState<number | null>(null);
-  // Height scales with width to hold a ~2.6:1 aspect (so it never stretches flat on wide screens).
-  const height = Math.round(Math.min(390, Math.max(260, width * 0.36)));
+  // Height tracks width so the chart fills fluidly yet never flattens on wide screens.
+  const height = Math.round(Math.min(470, Math.max(260, width * 0.34)));
 
   const padL = 8;
   const padR = 12;
