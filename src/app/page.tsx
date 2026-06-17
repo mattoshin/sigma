@@ -7,7 +7,7 @@ import { Kbd } from "@/components/ui/misc";
 import { HeroDistribution } from "@/components/hero-distribution";
 
 const MANIFESTO = [
-  { k: "Distributions", t: "Not a number, a shape", d: "The market's full risk-neutral density from the live option chain — Breeden-Litzenberger — overlaid with your own view." },
+  { k: "Distributions", t: "Not a number, a shape", d: "The market's full risk-neutral density from the live option chain, Breeden-Litzenberger, overlaid with your own view." },
   { k: "Expected value", t: "Research that ends in a bet", d: "Every thesis resolves to EV and a half-Kelly size, not a price target. A name can be a buy when consensus is the modal case." },
   { k: "Calibration", t: "Were your odds any good?", d: "Score your own probabilistic calls with a Brier score and reliability diagram. Process over outcome." },
 ];
@@ -41,8 +41,8 @@ export default async function Home() {
               >
                 Open SPY <ArrowUpRight className="h-3.5 w-3.5" />
               </Link>
-              <span className="flex items-center gap-2 text-sm text-faint">
-                or <Kbd>⌘K</Kbd> for any ticker
+              <span className="flex items-center gap-2 text-base text-muted">
+                or press <Kbd>⌘K</Kbd> for any ticker
               </span>
             </div>
           </div>
@@ -116,7 +116,7 @@ export default async function Home() {
                   </td>
                   <td className="px-3.5 py-2.5 text-right text-fg">±{fmtPct(r.expectedMovePct, 1)}</td>
                   <td className="px-3.5 py-2.5 text-right">
-                    {r.nextCatalyst ? <Badge variant="warn">soon</Badge> : <span className="text-faint">—</span>}
+                    {r.nextCatalyst ? <Badge variant="warn">soon</Badge> : <span className="text-faint">-</span>}
                   </td>
                 </tr>
               ))}

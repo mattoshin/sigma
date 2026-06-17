@@ -20,7 +20,7 @@ export default async function ScreenerPage() {
         </InfoHint>
       </div>
       <p className="mb-5 max-w-2xl text-sm leading-relaxed text-muted">
-        Sorted by the volatility risk premium by default — the names where implied vol most exceeds
+        Sorted by the volatility risk premium by default, the names where implied vol most exceeds
         realized. Click any column to re-sort, or any ticker to open its distribution studio. This is
         a vol-edge screen, not a cheap-P/E screen.
       </p>

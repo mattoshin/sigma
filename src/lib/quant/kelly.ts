@@ -4,7 +4,7 @@
  * We always surface HALF-Kelly, not full. That isn't timidity: full Kelly is
  * optimal only if your probabilities are exactly right, and they never are.
  * Fractional Kelly absorbs estimation error and is what disciplined desks
- * actually use — presenting it signals you understand parameter risk, not just
+ * actually use, presenting it signals you understand parameter risk, not just
  * the textbook formula. f* < 0 means the bet is negative-EV: don't bet.
  */
 
@@ -24,7 +24,7 @@ export function kellyBinary(winProb: number, payoffOdds: number): KellyResult {
 
   let note: string;
   if (!(b > 0)) {
-    note = "Non-positive payoff odds — not a bettable structure.";
+    note = "Non-positive payoff odds, not a bettable structure.";
   } else if (fullKelly <= 0) {
     note = "Negative-EV under your view at this price. Don't press it.";
   } else {

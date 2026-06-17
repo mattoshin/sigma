@@ -1,5 +1,5 @@
 /**
- * Expected move — the vol-literate summary that sits at the top of every ticker.
+ * Expected move, the vol-literate summary that sits at the top of every ticker.
  *
  * Two methods that reconcile (we show both so a quant can check our work):
  *   (a) IV method:        EM = S * IV * sqrt(DTE/365)
@@ -9,7 +9,7 @@
  * actually use, and keep the straddle method as the headline number.
  *
  * For a catalyst (earnings), isolate the move with the first expiry just after
- * the event and surface the IV-crush estimate — the mechanical 30-50% overnight
+ * the event and surface the IV-crush estimate, the mechanical 30-50% overnight
  * IV collapse that can sink a correct directional call held in long premium.
  */
 

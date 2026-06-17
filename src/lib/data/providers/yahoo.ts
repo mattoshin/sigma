@@ -1,5 +1,5 @@
 /**
- * Live market data via yahoo-finance2 — the only free source that returns a
+ * Live market data via yahoo-finance2, the only free source that returns a
  * full option chain with strikes, bid/ask, OI, and per-contract IV.
  *
  * This is unofficial/scraping-based with no SLA and noisy after-hours IV, so:
@@ -201,7 +201,7 @@ export async function getLiveAnalysts(ticker: string): Promise<AnalystConsensus 
     ratings: rt
       ? { strongBuy: rt.strongBuy, buy: rt.buy, hold: rt.hold, sell: rt.sell, strongSell: rt.strongSell }
       : { strongBuy: 0, buy: 0, hold: 0, sell: 0, strongSell: 0 },
-    recommendationKey: fd.recommendationKey ?? "—",
+    recommendationKey: fd.recommendationKey ?? "-",
     recommendationMean: fd.recommendationMean,
     epsNext:
       ee && ee.avg != null

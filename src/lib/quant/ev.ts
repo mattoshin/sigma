@@ -1,11 +1,11 @@
 /**
- * Expected value & edge — every screen ends here.
+ * Expected value & edge, every screen ends here.
  *
  * The product's whole thesis: replace "price target = $X" with
  *   EV = ∫ payoff(S_T) · f_subjective(S_T) dS_T
  * and define EDGE as where the analyst's subjective density disagrees with the
  * options-implied (risk-neutral) density. We then express that edge as concrete
- * trades — long stock, ATM/OTM calls, puts — pricing each structure's expected
+ * trades, long stock, ATM/OTM calls, puts, pricing each structure's expected
  * payoff under the subjective density against its actual market cost.
  *
  * Discounting note: option market prices are present values, so we discount the
@@ -110,7 +110,7 @@ export function analyzeEdge(
 
   const strategies: StrategyEV[] = [];
 
-  // Long stock — the delta-one expression of the view.
+  // Long stock, the delta-one expression of the view.
   strategies.push({
     label: "Long stock",
     marketPrice: spot,
@@ -139,7 +139,7 @@ export function analyzeEdge(
     );
   }
 
-  // Long ~5% OTM call — the convex, lottery-ticket expression.
+  // Long ~5% OTM call, the convex, lottery-ticket expression.
   const otmCall = nearestContract(expiry.calls, forward * 1.05);
   if (otmCall && otmCall.strike !== atmCall?.strike) {
     const K = otmCall.strike;
@@ -157,7 +157,7 @@ export function analyzeEdge(
     );
   }
 
-  // Long ATM put — the downside expression.
+  // Long ATM put, the downside expression.
   const atmPut = nearestContract(expiry.puts, forward);
   if (atmPut) {
     const K = atmPut.strike;

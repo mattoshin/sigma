@@ -2,7 +2,7 @@
 
 **Equity research in distributions, not price targets.**
 
-> Your terminal tells you the number. Oshin tells you the odds — where your odds disagree with the market's price, and whether you've earned the right to trust your own.
+> Your terminal tells you the number. Oshin tells you the odds, where your odds disagree with the market's price, and whether you've earned the right to trust your own.
 
 Oshin is an equity-research terminal built for a probability-and-EV way of thinking. Instead of a consensus mean or a single price target, it derives the market's full **risk-neutral probability distribution** from the live option chain, overlays the analyst's **own distribution**, and quantifies the gap between them as **expected value** and a **half-Kelly** position size. It then scores the analyst's probabilistic calls over time with a **Brier score and reliability diagram**.
 
@@ -15,22 +15,22 @@ It is deliberately *not* a cheaper Bloomberg or a "chat with a 10-K." It assumes
 Options-implied distributions already exist in *trading* tools (IBKR Probability Lab, TradingView). That is **not** the novelty here, and Oshin never claims it is. The genuinely open white space, which survives a skeptical read:
 
 1. **Bridging the fundamental research workflow to the implied distribution.** No fundamental-research product puts the analyst's catalyst distribution and the options market's implied distribution on one axis and reconciles them. That is Oshin's hero surface.
-2. **Scoring the user's *own* probabilistic calls.** Forecast accuracy is tracked for sell-side analysts (TipRanks), but calibration of *your* forecasts lives only in prediction markets — never in an equity-research UI.
+2. **Scoring the user's *own* probabilistic calls.** Forecast accuracy is tracked for sell-side analysts (TipRanks), but calibration of *your* forecasts lives only in prediction markets, never in an equity-research UI.
 
-And the single highest-credibility detail: the implied density is labeled **risk-neutral (Q)**, not real-world (P). Oshin surfaces the **volatility risk premium** explicitly and offers a transparent Q→P adjustment, rather than mislabeling Q as P — the red-flag error naive "implied probability" tools make.
+And the single highest-credibility detail: the implied density is labeled **risk-neutral (Q)**, not real-world (P). Oshin surfaces the **volatility risk premium** explicitly and offers a transparent Q→P adjustment, rather than mislabeling Q as P, the red-flag error naive "implied probability" tools make.
 
 ---
 
 ## What's in it
 
-- **Distribution studio** (`/t/[ticker]`) — the analyst's Bull/Base/Bear view rendered as a smooth density, overlaid on the options-implied risk-neutral density (Breeden-Litzenberger). The divergence is shaded as edge; hover reads "the market's odds vs your odds at every price."
-- **Edge & EV** — every view ends in an expected value, a strategy comparison (long stock / ATM call / OTM call / ATM put priced under your density vs market cost), and a half-Kelly size.
-- **Expected-move strip** — implied move into the next catalyst by two reconciling methods (IV and `0.85 × straddle`), with an IV-crush estimate for earnings expiries.
-- **Volatility panel** — IV vs realized vol, the volatility risk premium, and the implied-vol smile.
-- **AI analyst** — a scenario tree anchored to the options-implied base rate (never a bare model probability), with an explicit overconfidence caveat. Requires an Anthropic key; the rest works without it.
-- **Calibration scorecard** (`/calibration`) — Brier score + reliability diagram on your own tracked calls.
-- **Edge screener** (`/screener`) — the universe ranked by volatility risk premium.
-- **Methodology** (`/methodology`) — the math, written to be defended: Breeden-Litzenberger, the Shimko IV-spline, GEV/flat-IV tails, expected-move reconciliation, EV, the Q-vs-P/VRP distinction, Kelly, and calibration.
+- **Distribution studio** (`/t/[ticker]`), the analyst's Bull/Base/Bear view rendered as a smooth density, overlaid on the options-implied risk-neutral density (Breeden-Litzenberger). The divergence is shaded as edge; hover reads "the market's odds vs your odds at every price."
+- **Edge & EV**, every view ends in an expected value, a strategy comparison (long stock / ATM call / OTM call / ATM put priced under your density vs market cost), and a half-Kelly size.
+- **Expected-move strip**, implied move into the next catalyst by two reconciling methods (IV and `0.85 × straddle`), with an IV-crush estimate for earnings expiries.
+- **Volatility panel**, IV vs realized vol, the volatility risk premium, and the implied-vol smile.
+- **AI analyst**, a scenario tree anchored to the options-implied base rate (never a bare model probability), with an explicit overconfidence caveat. Requires an Anthropic key; the rest works without it.
+- **Calibration scorecard** (`/calibration`), Brier score + reliability diagram on your own tracked calls.
+- **Edge screener** (`/screener`), the universe ranked by volatility risk premium.
+- **Methodology** (`/methodology`), the math, written to be defended: Breeden-Litzenberger, the Shimko IV-spline, GEV/flat-IV tails, expected-move reconciliation, EV, the Q-vs-P/VRP distinction, Kelly, and calibration.
 
 ---
 
@@ -55,7 +55,7 @@ Put them in `.env.local`.
 
 ### Data & honesty
 
-The demo runs on baked, internally-consistent **snapshots** (a put-skewed smile, prices consistent with it, and a simulated history whose realized vol sits *below* implied so the VRP is real). They're stored as evergreen templates — relative DTEs rehydrated to "today" at load — so the demo never goes stale or breaks. Everything is labeled **delayed / illustrative**. Flip `OSHIN_FORCE_LIVE=1` to pull live option chains for any ticker.
+The demo runs on baked, internally-consistent **snapshots** (a put-skewed smile, prices consistent with it, and a simulated history whose realized vol sits *below* implied so the VRP is real). They're stored as evergreen templates, relative DTEs rehydrated to "today" at load, so the demo never goes stale or breaks. Everything is labeled **delayed / illustrative**. Flip `OSHIN_FORCE_LIVE=1` to pull live option chains for any ticker.
 
 Regenerate the snapshots with:
 
@@ -67,7 +67,7 @@ node scripts/gen-snapshots.mjs
 
 ## The quant engine
 
-Pure, dependency-free TypeScript in `src/lib/quant/`, unit-tested in `src/lib/quant/quant.test.ts`. The headline test feeds the Breeden-Litzenberger pipeline a chain priced off a *flat* implied-vol surface and asserts it recovers the closed-form Black-Scholes lognormal density — the correctness contract.
+Pure, dependency-free TypeScript in `src/lib/quant/`, unit-tested in `src/lib/quant/quant.test.ts`. The headline test feeds the Breeden-Litzenberger pipeline a chain priced off a *flat* implied-vol surface and asserts it recovers the closed-form Black-Scholes lognormal density, the correctness contract.
 
 ```bash
 pnpm test         # 12 proof tests

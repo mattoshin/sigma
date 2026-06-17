@@ -26,7 +26,7 @@ export function EdgeCard({ edge }: { edge: EdgeAnalysis }) {
         <p className="text-sm leading-relaxed text-muted">
           Market&apos;s expected price is{" "}
           <span className="mono text-info">{fmtMoney(ev.forward)}</span> (the risk-neutral forward).
-          Your view implies <span className="mono text-accent">{fmtMoney(ev.expectedPrice)}</span> —{" "}
+          Your view implies <span className="mono text-accent">{fmtMoney(ev.expectedPrice)}</span> -{" "}
           <span
             className={`mono font-semibold ${edgeTone === "up" ? "text-up" : edgeTone === "down" ? "text-down" : "text-muted"}`}
           >

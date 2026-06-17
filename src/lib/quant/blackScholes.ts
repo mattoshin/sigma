@@ -4,7 +4,7 @@
  * We use the generalized (Merton) form with a continuous dividend yield q, and
  * price off the forward where it matters. The implied-vol solver is the bridge
  * between raw option quotes and the risk-neutral density: we convert mids to
- * IVs, smooth in IV space, then reprice — never differentiating raw quotes.
+ * IVs, smooth in IV space, then reprice, never differentiating raw quotes.
  */
 
 import { normCdf, normPdf } from "./stats";
@@ -107,7 +107,7 @@ export function impliedVol(
 ): number {
   if (marketPrice <= 0 || T <= 0) return NaN;
 
-  // No-arbitrage bounds — reject quotes that can't correspond to a real vol.
+  // No-arbitrage bounds, reject quotes that can't correspond to a real vol.
   const dfR = Math.exp(-r * T);
   const dfQ = Math.exp(-q * T);
   const lowerBound =

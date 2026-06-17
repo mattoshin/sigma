@@ -1,5 +1,5 @@
 /**
- * Oshin — shared domain types.
+ * Oshin, shared domain types.
  *
  * This file is the single source of truth for every contract in the app. The
  * quant engine, the data layer, the API routes, and every screen import from
@@ -22,7 +22,7 @@ export interface Quote {
   currency?: string;
   marketState?: string;
   asOf: string; // ISO timestamp of the quote
-  delayed: boolean; // honesty flag — always surfaced in the UI
+  delayed: boolean; // honesty flag, always surfaced in the UI
 }
 
 export interface PriceBar {
@@ -150,7 +150,7 @@ export interface SubjectiveView {
 }
 
 // ---------------------------------------------------------------------------
-// Expected value, strategies, sizing — every screen ends here
+// Expected value, strategies, sizing, every screen ends here
 // ---------------------------------------------------------------------------
 
 export interface EVResult {
@@ -185,7 +185,7 @@ export interface EdgeAnalysis {
   ev: EVResult;
   strategies: StrategyEV[];
   kelly: KellyResult;
-  /** "The market's odds at every price" — P(S_T > K) from the RND. */
+  /** "The market's odds at every price", P(S_T > K) from the RND. */
   marketProbAbove: { price: number; prob: number }[];
   /** P(S_T > K) under the analyst's subjective density, same grid. */
   subjectiveProbAbove: { price: number; prob: number }[];
@@ -245,7 +245,7 @@ export interface CompanyFacts {
 }
 
 // ---------------------------------------------------------------------------
-// Calibration — scoring the user's OWN probabilistic calls (the white space)
+// Calibration, scoring the user's OWN probabilistic calls (the white space)
 // ---------------------------------------------------------------------------
 
 export interface TrackedCall {
@@ -309,7 +309,7 @@ export interface ScreenerRow {
 }
 
 // ---------------------------------------------------------------------------
-// The Street — aggregated analyst models (sell-side dispersion)
+// The Street, aggregated analyst models (sell-side dispersion)
 // ---------------------------------------------------------------------------
 
 export interface AnalystRatings {
@@ -342,7 +342,7 @@ export interface AnalystConsensus {
 }
 
 // ---------------------------------------------------------------------------
-// Provenance — every payload carries where it came from and how stale it is
+// Provenance, every payload carries where it came from and how stale it is
 // ---------------------------------------------------------------------------
 
 export type DataSource = "snapshot" | "yahoo" | "fmp" | "finnhub" | "edgar" | "alphavantage";

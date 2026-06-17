@@ -97,7 +97,7 @@ export async function getTickerBundle(ticker: string): Promise<TickerBundle> {
       earningsDte: snap?.earningsDte,
     };
   } catch (err) {
-    if (snap) return bundleFromSnapshot(snap, "live feed unavailable — snapshot fallback");
+    if (snap) return bundleFromSnapshot(snap, "live feed unavailable, snapshot fallback");
     throw new Error(`No data for ${t}: ${(err as Error).message}`);
   }
 }

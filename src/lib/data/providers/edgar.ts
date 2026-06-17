@@ -1,5 +1,5 @@
 /**
- * SEC EDGAR — the free, no-auth credibility anchor and catalyst/filing source.
+ * SEC EDGAR, the free, no-auth credibility anchor and catalyst/filing source.
  *
  * EDGAR REQUIRES a descriptive User-Agent (name + contact) or it silently 403s.
  * Best-effort: callers fall back to snapshot company facts on any failure.

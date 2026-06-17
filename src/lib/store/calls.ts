@@ -1,5 +1,5 @@
 /**
- * Tracked-call store — the calibration white space.
+ * Tracked-call store, the calibration white space.
  *
  * File-backed for local dev (.data/calls.json, gitignored). The interface is
  * deliberately thin so it can be reimplemented against Supabase later without

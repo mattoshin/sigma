@@ -16,7 +16,7 @@ export function VolPanel({ analysis, expiry }: { analysis: TickerAnalysis; expir
         <InfoHint>
           The implied (risk-neutral) distribution is NOT the real-world one. Risk aversion inflates
           downside probabilities; the persistent gap (IV &gt; subsequently-realized vol) is the
-          volatility risk premium. Signal, not guarantee — vol mean-reverts but timing is regime-
+          volatility risk premium. Signal, not guarantee, vol mean-reverts but timing is regime-
           dependent.
         </InfoHint>
       </PanelHeader>

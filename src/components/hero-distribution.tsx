@@ -1,5 +1,5 @@
 /**
- * The home signature: the product's defining artifact — the market's implied
+ * The home signature: the product's defining artifact, the market's implied
  * density and the analyst's view on one axis, divergence shaded as edge.
  * Pure server-rendered SVG (decorative, not interactive). Two normal curves
  * with a deliberate bullish, tighter "view" so the edge reads at a glance.

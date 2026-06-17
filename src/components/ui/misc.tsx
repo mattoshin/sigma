@@ -6,7 +6,7 @@ export function Kbd({ className, children }: { className?: string; children: Rea
   return (
     <kbd
       className={cn(
-        "mono inline-flex h-5 min-w-5 items-center justify-center rounded-sm border border-line2 bg-canvas px-1.5 text-[12px] text-muted",
+        "mono inline-flex h-6 min-w-6 items-center justify-center rounded-sm border border-line2 bg-raised px-2 text-[13px] font-medium text-fg",
         className,
       )}
     >
@@ -24,7 +24,7 @@ export function Separator({ className }: { className?: string }) {
   return <div className={cn("h-px w-full bg-line", className)} />;
 }
 
-/** A labeled stat cell — eyebrow label, confident mono value, optional sub. */
+/** A labeled stat cell, eyebrow label, confident mono value, optional sub. */
 export function Stat({
   label,
   value,

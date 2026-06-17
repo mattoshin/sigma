@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Oshin — research in distributions, not price targets",
+  title: "Oshin, research in distributions, not price targets",
   description:
     "An equity research terminal that puts your view and the options-implied distribution on one axis, quantifies the edge as expected value, and scores your own calibration over time.",
 };

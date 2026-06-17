@@ -1,5 +1,5 @@
 /**
- * The risk-neutral density (RND) — the analytical heart of Oshin.
+ * The risk-neutral density (RND), the analytical heart of Oshin.
  *
  * Method (Breeden-Litzenberger via the Shimko 1993 implied-vol-spline route):
  *   1. For each strike, take the liquid OTM option (put below spot, call above)
@@ -145,7 +145,7 @@ export function riskNeutralDensity(
   const clipped = rawDensity.map((d) => (d > 0 ? d : 0));
   const rawIntegral = trapz(grid, clipped);
   if (rawIntegral <= 0) {
-    throw new Error("Degenerate density — integral non-positive.");
+    throw new Error("Degenerate density, integral non-positive.");
   }
   if (Math.abs(rawIntegral - 1) > 0.08) {
     warnings.push(

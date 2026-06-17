@@ -52,7 +52,7 @@ export function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: 
           <Command.Group heading="Open live">
             <Item onSelect={() => go(`/t/${typed}`)} icon={TrendingUp}>
               <span className="mono text-accent">{typed}</span>
-              <span className="ml-2 text-faint">— pull live chain</span>
+              <span className="ml-2 text-faint">- pull live chain</span>
             </Item>
           </Command.Group>
         )}

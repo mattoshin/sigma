@@ -60,7 +60,7 @@ export default function MethodologyPage() {
         </p>
         <Formula>{`q(K) ≈ e^(rT) · [C(K−ΔK) − 2·C(K) + C(K+ΔK)] / ΔK²`}</Formula>
         <p>
-          We do <strong>not</strong> differentiate raw quotes — they&apos;re too noisy to survive two
+          We do <strong>not</strong> differentiate raw quotes, they&apos;re too noisy to survive two
           derivatives and yield ~50% negative densities. Instead we follow Shimko (1993):
         </p>
         <ol className="ml-4 list-decimal space-y-1">
@@ -83,7 +83,7 @@ export default function MethodologyPage() {
 Straddle method:  EM ≈ 0.85 × ATM straddle price`}</Formula>
         <p>
           They agree via Brenner-Subrahmanyam (each ATM option ≈ 0.4·S·σ·√T, so the straddle ≈
-          0.8·S·σ·√T). We quote the 0.85 practitioner multiplier desks actually use — distinct from
+          0.8·S·σ·√T). We quote the 0.85 practitioner multiplier desks actually use, distinct from
           the theoretical EM ≈ 1.25 × straddle, which answers the inverse question. For a catalyst we
           isolate the move with the first expiry just after the event and surface the IV-crush
           estimate: the mechanical 30–50% overnight IV collapse that can sink a correct directional
@@ -103,7 +103,7 @@ Straddle method:  EM ≈ 0.85 × ATM straddle price`}</Formula>
         </p>
       </Section>
 
-      <Section id="q-vs-p" title="Risk-neutral (Q) vs real-world (P) — the non-negotiable caveat">
+      <Section id="q-vs-p" title="Risk-neutral (Q) vs real-world (P), the non-negotiable caveat">
         <p>
           <Badge variant="warn">Read this one</Badge>
         </p>
@@ -129,7 +129,7 @@ Continuous:  f* = (μ − r) / σ²`}</Formula>
         <p>
           We always present <strong>half</strong>-Kelly. Full Kelly is optimal only if your
           probabilities are exactly right, which they never are; halving absorbs estimation error and
-          signals you understand parameter risk. f* &lt; 0 means negative EV — don&apos;t bet.
+          signals you understand parameter risk. f* &lt; 0 means negative EV, don&apos;t bet.
         </p>
       </Section>
 
@@ -139,7 +139,7 @@ Continuous:  f* = (μ − r) / σ²`}</Formula>
           we never surface a bare model probability. The model is handed the options-implied
           (risk-neutral) probabilities as a base rate and must anchor to them, justify any deviation
           with specific evidence, and return its own overconfidence caveat. The output feeds the same
-          EV engine as a manual view — it doesn&apos;t get a special pass.
+          EV engine as a manual view, it doesn&apos;t get a special pass.
         </p>
       </Section>
 
@@ -148,7 +148,7 @@ Continuous:  f* = (μ − r) / σ²`}</Formula>
           We score the analyst&apos;s own probabilistic calls with a Brier score (mean squared error
           of probability vs outcome; 0 is perfect, 0.25 is a coin flip answered &quot;50%&quot;) and a
           reliability diagram (when you say X%, does it happen X% of the time?). This grades decision
-          quality independent of any single outcome — process over outcome.
+          quality independent of any single outcome, process over outcome.
         </p>
       </Section>
 
@@ -158,7 +158,7 @@ Continuous:  f* = (μ − r) / σ²`}</Formula>
           SEC EDGAR for filings and fundamentals. The demo runs on baked, internally-consistent
           snapshots so it can&apos;t break live; flip <span className="mono">OSHIN_FORCE_LIVE=1</span>{" "}
           to pull live chains for any ticker, with snapshot fallback on error. Everything is labeled
-          delayed / illustrative. Honesty about data provenance is a feature, not a weakness — it
+          delayed / illustrative. Honesty about data provenance is a feature, not a weakness, it
           assumes you already have Bloomberg and proprietary analytics; Oshin adds the one reasoning
           layer those don&apos;t surface.
         </p>

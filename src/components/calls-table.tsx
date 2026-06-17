@@ -45,7 +45,7 @@ export function CallsTable({ calls }: { calls: TrackedCall[] }) {
               <td className="px-3 py-2 text-fg">{c.claim}</td>
               <td className="mono px-3 py-2 text-right text-accent">{fmtPct(c.predictedProb, 0)}</td>
               <td className="mono px-3 py-2 text-right text-muted">
-                {c.marketImpliedProb != null ? fmtPct(c.marketImpliedProb, 0) : "—"}
+                {c.marketImpliedProb != null ? fmtPct(c.marketImpliedProb, 0) : "-"}
               </td>
               <td className="px-3 py-2 text-right">
                 {c.resolved ? (

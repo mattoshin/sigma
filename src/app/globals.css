@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
- * Oshin — themed on @sandeep-jaiswar/ui (terminal-ui), a Bloomberg Terminal
+ * Oshin, themed on @sandeep-jaiswar/ui (terminal-ui), a Bloomberg Terminal
  * design system. True-black canvas, blue (#0068ff) primary, mint (#4af6c3) up,
  * red (#ff433d) down, orange (#fb8b1e) warning. Inter + SF Mono, sharp corners,
  * dense data with slightly wide tracking, terminal focus-glow.
@@ -11,7 +11,7 @@
  */
 
 :root {
-  /* Surfaces — terminal black with gray steps */
+  /* Surfaces, terminal black with gray steps */
   --canvas: #000000;
   --panel: #0e0e0e;
   --panel2: #1a1a1a;
@@ -19,17 +19,17 @@
   --line: #2a2a2a;
   --line2: #3a3a3a;
 
-  /* Text — brightened for legibility on true black */
+  /* Text, brightened for legibility on true black */
   --fg: #ffffff;
-  --muted: #a6adb8;
-  --faint: #757c87;
+  --muted: #b2b8c2;
+  --faint: #8a909c;
 
   /* Brand + signal (terminal-ui tokens) */
   --accent: #0068ff; /* primary blue */
   --accent-deep: #0052cc;
   --up: #4af6c3; /* success mint */
   --down: #ff433d; /* danger red */
-  --warn: #fb8b1e; /* warning orange — also "your view" in charts */
+  --warn: #fb8b1e; /* warning orange, also "your view" in charts */
   --info: #0068ff; /* market-implied = brand blue */
   --violet: #4d93ff; /* model / AI = light blue */
 }
@@ -105,7 +105,7 @@ body {
   background: color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
-/* Data type — every number, ticker, structural label */
+/* Data type, every number, ticker, structural label */
 .mono {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
@@ -135,7 +135,7 @@ body {
   box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.4);
 }
 
-/* Distribution motif backdrop — blue glow */
+/* Distribution motif backdrop, blue glow */
 .curve-bg {
   background-image: radial-gradient(
     120% 90% at 50% 100%,

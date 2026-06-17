@@ -1,10 +1,10 @@
 /**
- * Calibration scoring — the verified white space.
+ * Calibration scoring, the verified white space.
  *
  * Forecast accuracy is tracked for sell-side analysts (TipRanks) but never for
  * the USER'S OWN probabilistic calls outside prediction markets. This grades
  * decision quality independent of outcome: a Brier score and a reliability
- * diagram answer "when you say 60%, does it happen ~60% of the time?" — which
+ * diagram answer "when you say 60%, does it happen ~60% of the time?", which
  * is exactly how a poker-and-EV shop would want to be measured.
  *
  * Brier score = mean((predicted − outcome)²); 0 is perfect, 0.25 is a coin flip

@@ -3,7 +3,7 @@ import { getTickerTape } from "@/lib/screener";
 import { fmtMoney, fmtSignedPct } from "@/lib/format";
 
 /**
- * The header marquee. Bloomberg muscle memory and a small sign of life — the
+ * The header marquee. Bloomberg muscle memory and a small sign of life, the
  * universe scrolling by with last + change. Pure CSS animation (server-rendered),
  * paused on hover, disabled under reduced-motion.
  */

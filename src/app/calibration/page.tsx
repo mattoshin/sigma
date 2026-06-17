@@ -19,7 +19,7 @@ export default async function CalibrationPage() {
   const oc = cal.overconfidenceIndex;
   const ocLabel =
     !Number.isFinite(oc)
-      ? "—"
+      ? "-"
       : oc > 0.03
         ? "Systematically overconfident"
         : oc < -0.03
@@ -34,7 +34,7 @@ export default async function CalibrationPage() {
         <InfoHint>
           The verified white space: forecast accuracy is tracked for sell-side analysts, but never
           for your OWN probabilistic calls outside prediction markets. This grades decision quality
-          independent of any single outcome — exactly how a poker-and-EV shop would want to be
+          independent of any single outcome, exactly how a poker-and-EV shop would want to be
           measured.
         </InfoHint>
       </div>
@@ -49,7 +49,7 @@ export default async function CalibrationPage() {
           <PanelBody>
             <Stat
               label="Brier score"
-              value={Number.isFinite(cal.brierScore) ? cal.brierScore.toFixed(3) : "—"}
+              value={Number.isFinite(cal.brierScore) ? cal.brierScore.toFixed(3) : "-"}
               sub={`${cal.resolvedCount} resolved of ${cal.count}`}
               tone="accent"
             />
@@ -59,7 +59,7 @@ export default async function CalibrationPage() {
           <PanelBody>
             <Stat
               label="Overconfidence index"
-              value={Number.isFinite(oc) ? `${oc >= 0 ? "+" : ""}${(oc * 100).toFixed(1)} pts` : "—"}
+              value={Number.isFinite(oc) ? `${oc >= 0 ? "+" : ""}${(oc * 100).toFixed(1)} pts` : "-"}
               sub={ocLabel}
               tone={ocTone}
             />

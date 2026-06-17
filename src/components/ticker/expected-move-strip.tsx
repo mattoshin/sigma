@@ -34,7 +34,7 @@ export function ExpectedMoveStrip({ expiry }: { expiry: ExpiryAnalysis }) {
           Market is pricing <span className="text-accent">±{fmtPct(em.movePct, 1)}</span> into{" "}
           {expiry.expiry}
           {em.isEarningsExpiry
-            ? `. IV likely crushes ~${fmtPct(em.ivCrushEstimate ?? 0.4, 0)} overnight regardless of direction — a right directional call can still lose long premium.`
+            ? `. IV likely crushes ~${fmtPct(em.ivCrushEstimate ?? 0.4, 0)} overnight regardless of direction, a right directional call can still lose long premium.`
             : "."}
         </span>
         <InfoHint>

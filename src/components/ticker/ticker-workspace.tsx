@@ -81,7 +81,7 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
           <div className="space-y-4 lg:col-span-2">
             <Panel>
               <PanelHeader>
-                <PanelTitle>Your view vs the market — where the edge lives</PanelTitle>
+                <PanelTitle>Your view vs the market, where the edge lives</PanelTitle>
                 <div className="flex items-center gap-3 text-[12px] text-muted">
                   <span className="flex items-center gap-1">
                     <i className="inline-block h-1.5 w-3 bg-info" /> implied (Q)
@@ -107,7 +107,7 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
                   Hover to read the market&apos;s odds vs your odds at any price. Green = you assign
                   more probability than the market is pricing; red = less.{" "}
                   <span className="text-faint">
-                    The implied curve is risk-neutral (Q), not real-world odds — see the VRP panel.
+                    The implied curve is risk-neutral (Q), not real-world odds, see the VRP panel.
                   </span>
                 </p>
               </PanelBody>

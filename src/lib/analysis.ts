@@ -39,7 +39,7 @@ export interface ExpiryAnalysis {
   warnings: string[];
   /** Chain trimmed to strikes near spot, for client-side EV strategy pricing. */
   expiryChain: OptionExpiry;
-  /** "Market's odds at every price" — downsampled P(S_T > K) from the RND. */
+  /** "Market's odds at every price", downsampled P(S_T > K) from the RND. */
   probAbove: { price: number; prob: number }[];
 }
 
@@ -137,7 +137,7 @@ export async function buildTickerAnalysis(ticker: string): Promise<TickerAnalysi
   return {
     ticker: bundle.ticker,
     name: bundle.quote.data.name ?? entry?.name ?? bundle.ticker,
-    sector: entry?.sector ?? "—",
+    sector: entry?.sector ?? "-",
     spot,
     riskFreeRate: r,
     dividendYield: q,

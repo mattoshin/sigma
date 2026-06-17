@@ -80,7 +80,7 @@ export function ScreenerTable({ rows }: { rows: ScreenerRowFull[] }) {
               </td>
               <td className="px-3 py-2 text-right text-fg">±{fmtPct(r.expectedMovePct, 1)}</td>
               <td className="px-3 py-2 text-right">
-                {r.nextCatalyst ? <Badge variant="warn">soon</Badge> : <span className="text-faint">—</span>}
+                {r.nextCatalyst ? <Badge variant="warn">soon</Badge> : <span className="text-faint">-</span>}
               </td>
             </tr>
           ))}

@@ -36,7 +36,7 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
       <div className="flex min-h-full flex-col">
         <div className="sticky top-0 z-40 bg-canvas/95 backdrop-blur">
           <header className="flex h-12 items-center gap-5 border-b border-line px-4">
-            {/* wordmark — a distribution-curve mark + OSHIN */}
+            {/* wordmark, a distribution-curve mark + OSHIN */}
             <Link href="/" className="flex items-center gap-2">
               <svg viewBox="0 0 24 16" className="h-4 w-6 text-accent" fill="none" stroke="currentColor" strokeWidth={2.25} aria-hidden>
                 <path d="M1 15 C 6 15, 8 2, 12 2 S 18 15, 23 15" strokeLinecap="round" />
@@ -69,11 +69,11 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
             <div className="ml-auto flex items-center gap-2">
               <button
                 onClick={() => setOpen(true)}
-                className="flex h-7 items-center gap-2 rounded-sm border border-line bg-panel2 px-2.5 text-sm text-faint transition-colors hover:border-line2 hover:text-muted"
+                className="flex h-9 items-center gap-2.5 rounded-md border border-line2 bg-panel2 px-3 text-sm text-muted transition-colors hover:border-accent/60 hover:text-fg sm:min-w-[220px]"
               >
-                <Search className="h-3.5 w-3.5" />
-                <span className="mono hidden sm:inline">ticker</span>
-                <Kbd>⌘K</Kbd>
+                <Search className="h-4 w-4 text-accent" />
+                <span className="mono">Search ticker</span>
+                <Kbd className="ml-auto">⌘K</Kbd>
               </button>
 
               <ColorblindToggle />

@@ -53,7 +53,7 @@ export function AIPanel({
       <PanelBody className="space-y-3">
         <p className="text-[13px] leading-snug text-muted">
           The model is handed the options-implied (risk-neutral) probabilities as a base rate and must
-          anchor to them. We never surface a bare model probability — production LLMs are
+          anchor to them. We never surface a bare model probability, production LLMs are
           systematically overconfident, so we correct for it by construction.
         </p>
 
