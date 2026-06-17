@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# sigma local data store (tracked-calls; re-seeds on first run)
+/.data/
+
+# playwright mcp artifacts
+/.playwright-mcp/
