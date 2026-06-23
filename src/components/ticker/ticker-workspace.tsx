@@ -16,7 +16,7 @@ import { nearestByPrice } from "@/components/charts/chart-utils";
 import { Panel, PanelBody, PanelHeader, PanelTitle } from "@/components/ui/panel";
 import { computeEdge, makeDefaultView, makeViewFromStreet, scenariosFromAI } from "@/lib/edge";
 import type { TickerAnalysis } from "@/lib/analysis";
-import type { Scenario, SubjectiveView } from "@/lib/types";
+import type { ModelSource, Scenario, SubjectiveView } from "@/lib/types";
 
 function defaultExpiryIndex(analysis: TickerAnalysis): number {
   const earnings = analysis.expiries.findIndex((e) => e.earnings);
@@ -31,10 +31,20 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
   const [view, setView] = React.useState<SubjectiveView>(() =>
     makeDefaultView(analysis.ticker, expiry, analysis.spot),
   );
+  // Which model produced the current view, so tracked calls are attributed to
+  // it on the Arena scoreboard. Editing in the Model Lab (or loading a preset)
+  // makes the view the analyst's own.
+  const [activeSource, setActiveSource] = React.useState<ModelSource>("user");
+
+  const setUserView = React.useCallback((v: SubjectiveView) => {
+    setView(v);
+    setActiveSource("user");
+  }, []);
 
   // Reset the view when the analyst switches expiry.
   React.useEffect(() => {
     setView(makeDefaultView(analysis.ticker, analysis.expiries[expiryIdx], analysis.spot));
+    setActiveSource("user");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expiryIdx]);
 
@@ -43,8 +53,10 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
     [view, expiry, analysis.spot, analysis.riskFreeRate, analysis.dividendYield],
   );
 
-  const applyAI = (scenarios: Scenario[]) =>
+  const applyAI = (scenarios: Scenario[]) => {
     setView((v) => ({ ...v, scenarios: scenariosFromAI(scenarios) }));
+    setActiveSource("ai");
+  };
 
   const subjForwardProb = 1 - nearestByPrice(edge.subjective.points, expiry.forward).cdf;
   const mktForwardProb = 1 - nearestByPrice(expiry.rnd.points, expiry.forward).cdf;
@@ -139,9 +151,9 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
             <ModelLab
               ticker={analysis.ticker}
               view={view}
-              setView={setView}
+              setView={setUserView}
               edge={edge}
-              onReset={() => setView(makeDefaultView(analysis.ticker, expiry, analysis.spot))}
+              onReset={() => setUserView(makeDefaultView(analysis.ticker, expiry, analysis.spot))}
             />
             <div className="flex justify-end">
               <TrackCallDialog
@@ -150,6 +162,7 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
                 forward={expiry.forward}
                 subjectiveProbAbove={subjForwardProb}
                 marketProbAbove={mktForwardProb}
+                modelSource={activeSource}
               />
             </div>
             {analysis.analysts && (
@@ -157,9 +170,10 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
                 analysts={analysis.analysts}
                 spot={analysis.spot}
                 ratingActions={analysis.ratingActions}
-                onSeed={() =>
-                  setView(makeViewFromStreet(analysis.ticker, expiry, analysis.spot, analysis.analysts!))
-                }
+                onSeed={() => {
+                  setView(makeViewFromStreet(analysis.ticker, expiry, analysis.spot, analysis.analysts!));
+                  setActiveSource("street");
+                }}
               />
             )}
             <AIPanel

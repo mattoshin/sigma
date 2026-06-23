@@ -272,6 +272,7 @@ export interface TrackedCall {
   claim: string; // human-readable, e.g. "P(S_T > $200 by Mar expiry)"
   predictedProb: number; // the user's probability, 0..1
   marketImpliedProb?: number; // the RND probability at call time, for contrast
+  modelSource?: ModelSource; // which model made the call (for the Arena scoreboard)
   resolved: boolean;
   outcome?: boolean; // did the event happen?
   resolvedAt?: string;

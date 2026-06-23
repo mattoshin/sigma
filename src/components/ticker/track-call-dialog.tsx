@@ -7,6 +7,7 @@ import { Target, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { fmtMoney, fmtPct } from "@/lib/format";
+import type { ModelSource } from "@/lib/types";
 
 export function TrackCallDialog({
   ticker,
@@ -14,12 +15,14 @@ export function TrackCallDialog({
   forward,
   subjectiveProbAbove,
   marketProbAbove,
+  modelSource = "user",
 }: {
   ticker: string;
   horizon: string;
   forward: number;
   subjectiveProbAbove: number;
   marketProbAbove: number;
+  modelSource?: ModelSource;
 }) {
   const [open, setOpen] = React.useState(false);
   const [predicted, setPredicted] = React.useState(subjectiveProbAbove);
@@ -42,6 +45,7 @@ export function TrackCallDialog({
           claim,
           predictedProb: predicted,
           marketImpliedProb: marketProbAbove,
+          modelSource,
         }),
       });
       setDone(true);
