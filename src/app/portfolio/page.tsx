@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { fmtCompact, fmtMoney, fmtPct, fmtSignedPct } from "@/lib/format";
 import { fmtDate } from "@/lib/format";
 
-export const metadata = { title: "Portfolio · Oshin" };
+export const metadata = { title: "Portfolio · Riptide" };
 
 const TABS = ["Dashboard", "Positions", "Trade Log", "Attribution", "Prices"];
 

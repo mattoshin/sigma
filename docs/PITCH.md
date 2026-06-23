@@ -1,17 +1,17 @@
-# Oshin, interview playbook
+# Riptide, interview playbook
 
 How to demo this in the room, and how to defend it. Distilled from research on SIG's culture and the equity-research tooling landscape.
 
 ## The one-liner
 
-> "Every research tool you pay for ships a number where the honest answer is a distribution. Oshin puts my view and the options market's implied distribution on the same axis, quantifies the disagreement as expected value, sizes it with half-Kelly, and then grades whether my probabilities were actually any good."
+> "Every research tool you pay for ships a number where the honest answer is a distribution. Riptide puts my view and the options market's implied distribution on the same axis, quantifies the disagreement as expected value, sizes it with half-Kelly, and then grades whether my probabilities were actually any good."
 
 That sentence speaks SIG's native language, EV, distributions, edge, process over outcome, and signals you understand they are an options market maker, not an asset gatherer.
 
 ## Frame it right (this matters at SIG specifically)
 
 - SIG's core business is **options market making**. Their equity analysts sit on trading desks and feed views on **implied vol and expected moves around catalysts**. So lead with vol and EV, not DCFs and price targets.
-- Position Oshin as a **complement** to Bloomberg + their proprietary stack, not a replacement. You're adding the one reasoning layer they don't surface.
+- Position Riptide as a **complement** to Bloomberg + their proprietary stack, not a replacement. You're adding the one reasoning layer they don't surface.
 - Talk **edge, mispricing, sizing, and the firm's own PnL**, never "client value" or "AUM."
 
 ## The 5-minute demo flow
@@ -39,6 +39,6 @@ That sentence speaks SIG's native language, EV, distributions, edge, process ove
 
 ## Demo hygiene
 
-- Run on the default snapshot mode (it can't break). Mention `OSHIN_FORCE_LIVE=1` pulls live chains for any ticker, and the production upgrade is a licensed options feed (Polygon).
+- Run on the default snapshot mode (it can't break). Mention `RIPTIDE_FORCE_LIVE=1` pulls live chains for any ticker, and the production upgrade is a licensed options feed (Polygon).
 - Everything is labeled delayed/illustrative, say so. Honesty about provenance reads as sophistication to this audience.
 - Demo on SPY and AAPL (dense chains → clean densities).

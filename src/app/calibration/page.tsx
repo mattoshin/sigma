@@ -7,7 +7,7 @@ import { Stat } from "@/components/ui/misc";
 import { InfoHint } from "@/components/ui/tooltip";
 import { fmtPct } from "@/lib/format";
 
-export const metadata = { title: "Calibration · Oshin" };
+export const metadata = { title: "Calibration · Riptide" };
 
 // This page mutates via the resolve action, so render it dynamically.
 export const dynamic = "force-dynamic";

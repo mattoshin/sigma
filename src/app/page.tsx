@@ -26,11 +26,11 @@ export default async function Home() {
             <h1 className="display mt-5 text-4xl font-semibold leading-[1.05] text-fg sm:text-5xl">
               Your terminal tells you the number.
               <br />
-              <span className="text-accent">Oshin tells you the odds.</span>
+              <span className="text-accent">Riptide tells you the odds.</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-muted">
               Every research tool ships a point estimate where the honest answer is a distribution.
-              Oshin puts your view and the options-implied distribution on one axis, quantifies the
+              Riptide puts your view and the options-implied distribution on one axis, quantifies the
               gap as expected value, sizes the bet with half-Kelly, and scores your calibration over
               time.
             </p>

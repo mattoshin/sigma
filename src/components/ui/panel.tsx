@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export function Panel({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("rounded-md border border-line bg-panel shadow-card", className)} {...props} />;
+  return <div className={cn("glass shadow-card", className)} {...props} />;
 }
 
 export function PanelHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

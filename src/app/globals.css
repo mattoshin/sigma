@@ -1,37 +1,39 @@
 @import "tailwindcss";
 
 /*
- * Oshin, themed on @sandeep-jaiswar/ui (terminal-ui), a Bloomberg Terminal
- * design system. True-black canvas, blue (#0068ff) primary, mint (#4af6c3) up,
- * red (#ff433d) down, orange (#fb8b1e) warning. Inter + SF Mono, sharp corners,
- * dense data with slightly wide tracking, terminal focus-glow.
+ * Riptide, "Midnight Command Center". A deep-ocean near-black canvas with
+ * frosted-glass data cards and ONE bioluminescent signal accent: ocean-cyan
+ * (#2fe3bf). Inter for UI, SF Mono for every figure (tabular-nums).
  *
- * Oshin's own mapping: market-implied = blue (the brand), your view = orange,
- * so the two distributions stay distinct while we adopt the identity wholesale.
+ * Chart color mapping: market-implied (risk-neutral) = ocean-cyan
+ * (--info / --accent, the brand); your own view = coral (--warn), so the two
+ * distributions stay unmistakably distinct. Warm coral is reserved for
+ * divergence / "your view"; green/red stay P&L semantics.
  */
 
 :root {
-  /* Surfaces, terminal black with gray steps */
-  --canvas: #000000;
-  --panel: #0e0e0e;
-  --panel2: #1a1a1a;
-  --raised: #262626;
-  --line: #2a2a2a;
-  --line2: #3a3a3a;
+  /* Surfaces, deep-ocean near-black with a faint blue-green tint */
+  --canvas: #05080a;
+  --panel: #0c0f13;
+  --panel2: #141821;
+  --raised: #1c212c;
+  /* Hair-thin white-alpha borders read as frosted glass */
+  --line: rgba(255, 255, 255, 0.08);
+  --line2: rgba(255, 255, 255, 0.14);
 
-  /* Text, brightened for legibility on true black */
+  /* Text, brightened for legibility on near-black */
   --fg: #ffffff;
   --muted: #b2b8c2;
   --faint: #8a909c;
 
-  /* Brand + signal (terminal-ui tokens) */
-  --accent: #0068ff; /* primary blue */
-  --accent-deep: #0052cc;
-  --up: #4af6c3; /* success mint */
+  /* Brand + signal */
+  --accent: #2fe3bf; /* bioluminescent ocean-cyan, the single signal accent */
+  --accent-deep: #1fb89a;
+  --up: #4af6c3; /* success mint (cool, stays in the ocean family) */
   --down: #ff433d; /* danger red */
-  --warn: #fb8b1e; /* warning orange, also "your view" in charts */
-  --info: #0068ff; /* market-implied = brand blue */
-  --violet: #4d93ff; /* model / AI = light blue */
+  --warn: #ff8a6b; /* coral, "your view" + divergence, the only warm accent */
+  --info: #2fe3bf; /* market-implied = brand cyan */
+  --violet: #8b9cff; /* model / AI = periwinkle, distinct from cyan */
 }
 
 /* Colorblind-safe: blue (up) / orange (down). */
@@ -51,13 +53,13 @@ html.light {
   --fg: #232020;
   --muted: #5f584c;
   --faint: #8c8472;
-  --accent: #0b5bd6;
-  --accent-deep: #08409c;
+  --accent: #0b9c84;
+  --accent-deep: #077a68;
   --up: #1f8a4c;
   --down: #c0392b;
-  --warn: #b06d0a;
-  --info: #0b5bd6;
-  --violet: #6a4fc0;
+  --warn: #c4502f;
+  --info: #0b9c84;
+  --violet: #5b62c9;
 }
 html.light .shadow-card {
   box-shadow: 0 1px 3px rgba(40, 35, 25, 0.08), 0 1px 2px rgba(40, 35, 25, 0.05);
@@ -154,19 +156,33 @@ body {
   color: var(--muted);
 }
 
-/* Terminal focus-glow (from terminal-ui shadow tokens) */
+/* Focus-glow, now bioluminescent cyan */
 .glow-accent {
-  box-shadow: 0 0 0 3px rgba(0, 104, 255, 0.2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
 }
+/* Soft, near-flat elevation (the system leans on glass + hairlines, not shadows) */
 .shadow-card {
-  box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.6);
 }
 
-/* Distribution motif backdrop, blue glow */
+/*
+ * Frosted-glass data card (the Fey "midnight command center" surface). A
+ * translucent panel + backdrop blur + the white-alpha hairline border. Used by
+ * <Panel>, so every card app-wide picks it up.
+ */
+.glass {
+  background: color-mix(in srgb, var(--panel) 72%, transparent);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+/* Distribution motif backdrop, bioluminescent cyan glow */
 .curve-bg {
   background-image: radial-gradient(
     120% 90% at 50% 100%,
-    color-mix(in srgb, var(--accent) 9%, transparent) 0%,
+    color-mix(in srgb, var(--accent) 13%, transparent) 0%,
     transparent 60%
   );
 }

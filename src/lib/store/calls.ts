@@ -10,7 +10,7 @@
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import type { TrackedCall } from "@/lib/types";
+import type { ModelSource, TrackedCall } from "@/lib/types";
 
 const DATA_DIR = path.join(process.cwd(), ".data");
 const DATA_FILE = path.join(DATA_DIR, "calls.json");
@@ -58,6 +58,10 @@ function buildSeed(): TrackedCall[] {
     const resolvedAt = new Date(now - (daysAgo - horizon) * 86_400_000).toISOString();
     // A plausible market-implied prob slightly less extreme than the user's.
     const marketImpliedProb = Math.min(0.92, Math.max(0.08, 0.5 + (p - 0.5) * 0.7));
+    // Spread the seeded track record across the three authored models so the
+    // Arena scoreboard isn't empty (the market column scores marketImpliedProb
+    // across every call). The analyst's own view is the majority.
+    const modelSource: ModelSource = i % 4 === 1 ? "street" : i % 4 === 3 ? "ai" : "user";
     return {
       id: `seed-${i}`,
       ticker,
@@ -66,6 +70,7 @@ function buildSeed(): TrackedCall[] {
       claim: `${ticker}: ${claim}`,
       predictedProb: p,
       marketImpliedProb,
+      modelSource,
       resolved: true,
       outcome,
       resolvedAt,
@@ -86,9 +91,17 @@ async function readAll(): Promise<TrackedCall[]> {
 }
 
 async function writeAll(calls: TrackedCall[]): Promise<void> {
+  // In-memory cache is the source of truth for the session; the disk write is
+  // best-effort. On a read-only filesystem (e.g. Vercel serverless) the write
+  // throws, but seeded calibration still reads and calls logged this session
+  // live in memory until the lambda recycles. Supabase is the durable upgrade.
   cache = calls;
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.writeFile(DATA_FILE, JSON.stringify(calls, null, 2), "utf8");
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    await fs.writeFile(DATA_FILE, JSON.stringify(calls, null, 2), "utf8");
+  } catch {
+    /* read-only fs: persist in memory only */
+  }
 }
 
 export async function listCalls(): Promise<TrackedCall[]> {

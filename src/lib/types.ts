@@ -1,5 +1,5 @@
 /**
- * Oshin, shared domain types.
+ * Riptide, shared domain types.
  *
  * This file is the single source of truth for every contract in the app. The
  * quant engine, the data layer, the API routes, and every screen import from
@@ -149,6 +149,22 @@ export interface SubjectiveView {
   spreadMultiplier: number;
 }
 
+/**
+ * Which model produced a view or a tracked call. The four sources the terminal
+ * can put on one axis: the analyst's own view, the sell-side Street consensus,
+ * the AI analyst, and the market-implied (risk-neutral) distribution itself.
+ */
+export type ModelSource = "user" | "street" | "ai" | "market";
+
+/** A named, saved SubjectiveView the analyst can reload and compare in the Arena. */
+export interface ModelPreset {
+  id: string; // `${ticker}:${name}`
+  name: string; // "My Base", "Momentum", "Mean-revert"
+  ticker: string;
+  createdAt: string; // ISO
+  view: SubjectiveView;
+}
+
 // ---------------------------------------------------------------------------
 // Expected value, strategies, sizing, every screen ends here
 // ---------------------------------------------------------------------------
@@ -256,6 +272,7 @@ export interface TrackedCall {
   claim: string; // human-readable, e.g. "P(S_T > $200 by Mar expiry)"
   predictedProb: number; // the user's probability, 0..1
   marketImpliedProb?: number; // the RND probability at call time, for contrast
+  modelSource?: ModelSource; // which model made the call (for the Arena scoreboard)
   resolved: boolean;
   outcome?: boolean; // did the event happen?
   resolvedAt?: string;

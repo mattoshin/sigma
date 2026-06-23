@@ -3,7 +3,7 @@
  * on any error so the app never breaks. Built against FMP's documented v3/v4
  * endpoints; shapes are verified live once a key is present.
  *
- * What it unlocks for Oshin:
+ * What it unlocks for Riptide:
  *   - per-firm rating actions (the named-firm "Goldman upgraded to Buy" data)
  *   - analyst price-target consensus and revenue/EPS estimate dispersion
  *   - fundamentals, key ratios, and FMP's DCF (a fundamental anchor vs price)

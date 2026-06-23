@@ -4,8 +4,9 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { TickerHeader } from "./ticker-header";
 import { ExpectedMoveStrip } from "./expected-move-strip";
-import { ScenarioBuilder } from "./scenario-builder";
-import { EdgeCard } from "./edge-card";
+import { ModelLab } from "./model-lab";
+import { ModelArena } from "./model-arena";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { VolPanel } from "./vol-panel";
 import { AIPanel } from "./ai-panel";
 import { CompanyFactsPanel } from "./company-facts";
@@ -17,7 +18,7 @@ import { nearestByPrice } from "@/components/charts/chart-utils";
 import { Panel, PanelBody, PanelHeader, PanelTitle } from "@/components/ui/panel";
 import { computeEdge, makeDefaultView, makeViewFromStreet, scenariosFromAI } from "@/lib/edge";
 import type { TickerAnalysis } from "@/lib/analysis";
-import type { Scenario, SubjectiveView } from "@/lib/types";
+import type { ModelSource, Scenario, SubjectiveView } from "@/lib/types";
 
 function defaultExpiryIndex(analysis: TickerAnalysis): number {
   const earnings = analysis.expiries.findIndex((e) => e.earnings);
@@ -32,10 +33,20 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
   const [view, setView] = React.useState<SubjectiveView>(() =>
     makeDefaultView(analysis.ticker, expiry, analysis.spot),
   );
+  // Which model produced the current view, so tracked calls are attributed to
+  // it on the Arena scoreboard. Editing in the Model Lab (or loading a preset)
+  // makes the view the analyst's own.
+  const [activeSource, setActiveSource] = React.useState<ModelSource>("user");
+
+  const setUserView = React.useCallback((v: SubjectiveView) => {
+    setView(v);
+    setActiveSource("user");
+  }, []);
 
   // Reset the view when the analyst switches expiry.
   React.useEffect(() => {
     setView(makeDefaultView(analysis.ticker, analysis.expiries[expiryIdx], analysis.spot));
+    setActiveSource("user");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expiryIdx]);
 
@@ -44,8 +55,10 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
     [view, expiry, analysis.spot, analysis.riskFreeRate, analysis.dividendYield],
   );
 
-  const applyAI = (scenarios: Scenario[]) =>
+  const applyAI = (scenarios: Scenario[]) => {
     setView((v) => ({ ...v, scenarios: scenariosFromAI(scenarios) }));
+    setActiveSource("ai");
+  };
 
   const subjForwardProb = 1 - nearestByPrice(edge.subjective.points, expiry.forward).cdf;
   const mktForwardProb = 1 - nearestByPrice(expiry.rnd.points, expiry.forward).cdf;
@@ -135,39 +148,61 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
             </div>
           </div>
 
-          {/* right: the studio, the edge, the bet, the AI */}
-          <div className="space-y-4">
-            <ScenarioBuilder
-              view={view}
-              setView={setView}
-              onReset={() => setView(makeDefaultView(analysis.ticker, expiry, analysis.spot))}
-            />
-            <EdgeCard edge={edge.edge} />
-            <div className="flex justify-end">
-              <TrackCallDialog
-                ticker={analysis.ticker}
-                horizon={expiry.expiry}
-                forward={expiry.forward}
-                subjectiveProbAbove={subjForwardProb}
-                marketProbAbove={mktForwardProb}
-              />
-            </div>
-            {analysis.analysts && (
-              <StreetPanel
-                analysts={analysis.analysts}
-                spot={analysis.spot}
-                ratingActions={analysis.ratingActions}
-                onSeed={() =>
-                  setView(makeViewFromStreet(analysis.ticker, expiry, analysis.spot, analysis.analysts!))
-                }
-              />
-            )}
-            <AIPanel
-              ticker={analysis.ticker}
-              expiryIndex={expiryIdx}
-              aiEnabled={aiEnabled}
-              onApply={applyAI}
-            />
+          {/* right: author a model in the Lab, then stack them all in the Arena */}
+          <div>
+            <Tabs defaultValue="lab">
+              <TabsList>
+                <TabsTrigger value="lab">Model Lab</TabsTrigger>
+                <TabsTrigger value="arena">Arena</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="lab" className="space-y-4 pt-4">
+                <ModelLab
+                  ticker={analysis.ticker}
+                  view={view}
+                  setView={setUserView}
+                  edge={edge}
+                  onReset={() => setUserView(makeDefaultView(analysis.ticker, expiry, analysis.spot))}
+                />
+                <div className="flex justify-end">
+                  <TrackCallDialog
+                    ticker={analysis.ticker}
+                    horizon={expiry.expiry}
+                    forward={expiry.forward}
+                    subjectiveProbAbove={subjForwardProb}
+                    marketProbAbove={mktForwardProb}
+                    modelSource={activeSource}
+                  />
+                </div>
+                {analysis.analysts && (
+                  <StreetPanel
+                    analysts={analysis.analysts}
+                    spot={analysis.spot}
+                    ratingActions={analysis.ratingActions}
+                    onSeed={() => {
+                      setView(makeViewFromStreet(analysis.ticker, expiry, analysis.spot, analysis.analysts!));
+                      setActiveSource("street");
+                    }}
+                  />
+                )}
+                <AIPanel
+                  ticker={analysis.ticker}
+                  expiryIndex={expiryIdx}
+                  aiEnabled={aiEnabled}
+                  onApply={applyAI}
+                />
+              </TabsContent>
+
+              <TabsContent value="arena" className="pt-4">
+                <ModelArena
+                  analysis={analysis}
+                  expiry={expiry}
+                  expiryIndex={expiryIdx}
+                  userView={view}
+                  aiEnabled={aiEnabled}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>
