@@ -4,10 +4,10 @@ import { Panel, PanelBody, PanelHeader, PanelTitle } from "@/components/ui/panel
 import { Badge } from "@/components/ui/badge";
 import { fmtCompact, fmtMoney, fmtPct, fmtSignedPct } from "@/lib/format";
 import { fmtDate } from "@/lib/format";
+import { PortfolioTabs } from "./tabs";
+import type { PortfolioModel } from "@/lib/portfolio";
 
 export const metadata = { title: "Portfolio · Riptide" };
-
-const TABS = ["Dashboard", "Positions", "Trade Log", "Attribution", "Prices"];
 
 function tone(n: number) {
   return n >= 0 ? "text-up" : "text-down";
@@ -43,20 +43,16 @@ export default function PortfolioPage() {
         </div>
       </div>
 
-      {/* sub-nav */}
-      <div className="mt-3 flex items-center gap-1 border-b border-line">
-        {TABS.map((t, i) => (
-          <span
-            key={t}
-            className={`mono -mb-px border-b-2 px-3 py-2 text-sm uppercase tracking-wider ${
-              i === 0 ? "border-accent text-accent" : "border-transparent text-faint"
-            }`}
-          >
-            {t}
-          </span>
-        ))}
-      </div>
+      {/* tabbed workspace; dashboard content is rendered server-side and handed
+          to the client tab shell, the other tabs render from the same model */}
+      <PortfolioTabs model={p} dashboard={<Dashboard p={p} />} />
+    </div>
+  );
+}
 
+function Dashboard({ p }: { p: PortfolioModel }) {
+  return (
+    <>
       {/* summary metrics */}
       <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="Inception to date" value={fmtSignedPct(p.itdReturn)} chip={`${fmtSignedPct(p.itdVsSpy)} vs SPY`} chipTone={tone(p.itdVsSpy)} big />
@@ -152,7 +148,7 @@ export default function PortfolioPage() {
         {p.summary.trades} trades · {p.summary.openLong}L / {p.summary.openShort}S open · paper, illustrative, not
         investment advice
       </p>
-    </div>
+    </>
   );
 }
 

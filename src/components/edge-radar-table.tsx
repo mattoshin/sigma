@@ -40,6 +40,9 @@ export function EdgeRadarTable({ rows, aiEnabled }: { rows: EdgeRadarRow[]; aiEn
   const explain = async () => {
     setLoading(true);
     setError(null);
+    setCommentary(null);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
     try {
       const gaps = sorted
         .slice(0, 5)
@@ -48,32 +51,61 @@ export function EdgeRadarTable({ rows, aiEnabled }: { rows: EdgeRadarRow[]; aiEn
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ gaps }),
+        signal: controller.signal,
       });
       if (!res.ok) {
         const b = await res.json().catch(() => ({}));
-        throw new Error(b.error ?? `Request failed (${res.status})`);
+        const detail = b.error ?? `Request failed (${res.status})`;
+        throw new Error(
+          res.status === 503 ? "AI is not configured (ANTHROPIC_API_KEY is unset)." : detail,
+        );
       }
       const data = await res.json();
-      setCommentary(data.commentary as string);
+      const text = (data.commentary as string)?.trim();
+      if (!text) throw new Error("The analyst returned an empty response. Try again.");
+      setCommentary(text);
     } catch (e) {
-      setError((e as Error).message);
+      const err = e as Error;
+      setError(
+        err.name === "AbortError"
+          ? "The analyst timed out after 30s. Try again."
+          : err.message || "Something went wrong. Try again.",
+      );
     } finally {
+      clearTimeout(timeout);
       setLoading(false);
     }
   };
 
   return (
     <div className="space-y-4">
-      {aiEnabled && (
+      {aiEnabled ? (
         <div>
           <Button variant="accent" size="sm" onClick={explain} disabled={loading}>
-            <Sparkles className="h-3.5 w-3.5" />
+            <Sparkles className={cn("h-3.5 w-3.5", loading && "animate-pulse")} />
             {loading ? "Reasoning…" : "Explain the top gaps with AI"}
           </Button>
-          {error && <p className="mt-1 text-[12px] text-down">{error}</p>}
+          {error && (
+            <p className="mt-1 text-[12px] text-down" role="alert">
+              {error}
+            </p>
+          )}
+        </div>
+      ) : (
+        <div className="flex items-center gap-1.5 text-[12px] text-faint">
+          <Sparkles className="h-3.5 w-3.5" />
+          <span>AI commentary is off. Set ANTHROPIC_API_KEY to ask the analyst why the top gaps exist.</span>
         </div>
       )}
-      {commentary && (
+      {loading && (
+        <div className="rounded-md border border-violet/30 bg-violet/5 px-4 py-3 text-[13px] leading-relaxed text-muted">
+          <div className="eyebrow mb-1 text-violet">AI · why these gaps exist</div>
+          <span className="animate-pulse text-faint">
+            Reasoning over the top divergences&hellip; this can take a few seconds.
+          </span>
+        </div>
+      )}
+      {!loading && commentary && (
         <div className="rounded-md border border-violet/30 bg-violet/5 px-4 py-3 text-[13px] leading-relaxed text-muted">
           <div className="eyebrow mb-1 text-violet">AI · why these gaps exist</div>
           {commentary}

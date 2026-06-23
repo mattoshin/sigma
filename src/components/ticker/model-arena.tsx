@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Sparkles, GitCompare } from "lucide-react";
+import { Sparkles, GitCompare, Loader2, AlertTriangle, RotateCw } from "lucide-react";
 import { Panel, PanelBody, PanelHeader, PanelTitle } from "@/components/ui/panel";
 import { Button } from "@/components/ui/button";
 import { InfoHint } from "@/components/ui/tooltip";
@@ -11,6 +11,46 @@ import { compareModels, MODEL_COLOR, MODEL_LABEL } from "@/lib/arena";
 import { fmtSignedPct, fmtPct } from "@/lib/format";
 import type { ExpiryAnalysis, TickerAnalysis } from "@/lib/analysis";
 import type { AIScenarioResult, SubjectiveView } from "@/lib/types";
+
+/** Hard ceiling on a single AI generation so a slow model never hangs the UI. */
+const AI_TIMEOUT_MS = 45_000;
+
+/** A 503 / missing-key response means the key is unset at runtime, not a transient error. */
+const NOT_CONFIGURED = "__ai_not_configured__";
+
+/**
+ * POST the scenario request with a client-side timeout. Throws the
+ * NOT_CONFIGURED sentinel when the key is unset, or an Error whose message is
+ * safe to surface to the user.
+ */
+async function requestScenarios(body: { ticker: string; expiryIndex: number }): Promise<AIScenarioResult> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), AI_TIMEOUT_MS);
+  try {
+    const res = await fetch("/api/ai/scenarios", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      const payload = await res.json().catch(() => ({}));
+      const msg: string = payload.error ?? `Request failed (${res.status})`;
+      if (res.status === 503 || /not configured|api[_ ]?key/i.test(msg)) {
+        throw new Error(NOT_CONFIGURED);
+      }
+      throw new Error(msg);
+    }
+    return (await res.json()) as AIScenarioResult;
+  } catch (e) {
+    if ((e as Error).name === "AbortError") {
+      throw new Error(`The model took longer than ${AI_TIMEOUT_MS / 1000}s to respond. Try again.`);
+    }
+    throw e;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 /**
  * The Arena tab: the market, your view, the Street, and (on demand) the AI
@@ -34,11 +74,14 @@ export function ModelArena({
   const [aiView, setAiView] = React.useState<SubjectiveView | null>(null);
   const [loadingAI, setLoadingAI] = React.useState(false);
   const [aiError, setAiError] = React.useState<string | null>(null);
+  // Runtime detection: the key can be unset even when the server thought it was enabled.
+  const [aiNotConfigured, setAiNotConfigured] = React.useState(false);
 
   // A generated AI view is tied to one expiry; drop it when the analyst switches.
   React.useEffect(() => {
     setAiView(null);
     setAiError(null);
+    setAiNotConfigured(false);
   }, [expiryIndex]);
 
   const comparison = React.useMemo(
@@ -59,16 +102,7 @@ export function ModelArena({
     setLoadingAI(true);
     setAiError(null);
     try {
-      const res = await fetch("/api/ai/scenarios", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ticker: analysis.ticker, expiryIndex }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error ?? `Request failed (${res.status})`);
-      }
-      const result = (await res.json()) as AIScenarioResult;
+      const result = await requestScenarios({ ticker: analysis.ticker, expiryIndex });
       setAiView({
         ticker: analysis.ticker,
         horizon: expiry.expiry,
@@ -76,11 +110,18 @@ export function ModelArena({
         scenarios: result.scenarios,
       });
     } catch (e) {
-      setAiError((e as Error).message);
+      if ((e as Error).message === NOT_CONFIGURED) {
+        setAiNotConfigured(true);
+      } else {
+        setAiError((e as Error).message);
+      }
     } finally {
       setLoadingAI(false);
     }
   };
+
+  // Show the AI affordance unless we've confirmed at runtime that the key is unset.
+  const aiAvailable = aiEnabled && !aiNotConfigured;
 
   return (
     <div className="space-y-4">
@@ -111,13 +152,55 @@ export function ModelArena({
             ))}
           </div>
 
-          {aiEnabled && !hasAI && (
-            <div>
-              <Button variant="outline" size="sm" onClick={generateAI} disabled={loadingAI}>
-                <Sparkles className="h-3.5 w-3.5" />
+          {aiAvailable && !hasAI && (
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={generateAI}
+                disabled={loadingAI}
+                aria-busy={loadingAI}
+              >
+                {loadingAI ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="h-3.5 w-3.5" />
+                )}
                 {loadingAI ? "Reasoning…" : "Add the AI analyst"}
               </Button>
-              {aiError && <p className="mt-1 text-[12px] text-down">{aiError}</p>}
+
+              {loadingAI && (
+                <p className="flex items-center gap-1.5 text-[12px] text-faint" role="status">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  Fitting the AI analyst to the same price grid…
+                </p>
+              )}
+
+              {aiError && (
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-down">
+                  <span className="flex items-start gap-1.5">
+                    <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" />
+                    {aiError}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={generateAI}
+                    disabled={loadingAI}
+                    className="h-6 border-down/40 px-2 text-down hover:bg-down/10"
+                  >
+                    <RotateCw className="h-3 w-3" />
+                    Retry
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {aiNotConfigured && !hasAI && (
+            <div className="rounded-sm border border-line bg-panel2 px-3 py-2 text-[12px] text-faint">
+              Set <span className="mono text-muted">ANTHROPIC_API_KEY</span> to add the AI analyst.
+              The market, your view, and the Street are all live without it.
             </div>
           )}
         </PanelBody>

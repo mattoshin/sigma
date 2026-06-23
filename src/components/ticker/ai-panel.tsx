@@ -1,12 +1,53 @@
 "use client";
 
 import * as React from "react";
-import { Sparkles, AlertTriangle } from "lucide-react";
+import { Sparkles, AlertTriangle, Loader2, RotateCw } from "lucide-react";
 import { Panel, PanelBody, PanelHeader, PanelTitle } from "@/components/ui/panel";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { fmtMoney, fmtPct } from "@/lib/format";
 import type { AIScenarioResult, Scenario } from "@/lib/types";
+
+/** Hard ceiling on a single AI generation so a slow model never hangs the UI. */
+const AI_TIMEOUT_MS = 45_000;
+
+/** A 503 / missing-key response means the key is unset at runtime, not a transient error. */
+const NOT_CONFIGURED = "__ai_not_configured__";
+
+/**
+ * POST the scenario request with a client-side timeout. Distinguishes three
+ * outcomes: a parsed result, the "not configured" sentinel, or a thrown Error
+ * whose message is safe to surface to the user.
+ */
+async function requestScenarios(body: { ticker: string; expiryIndex: number }): Promise<AIScenarioResult> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), AI_TIMEOUT_MS);
+  try {
+    const res = await fetch("/api/ai/scenarios", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      const payload = await res.json().catch(() => ({}));
+      const msg: string = payload.error ?? `Request failed (${res.status})`;
+      // The endpoint returns 503 when ANTHROPIC_API_KEY is unset.
+      if (res.status === 503 || /not configured|api[_ ]?key/i.test(msg)) {
+        throw new Error(NOT_CONFIGURED);
+      }
+      throw new Error(msg);
+    }
+    return (await res.json()) as AIScenarioResult;
+  } catch (e) {
+    if ((e as Error).name === "AbortError") {
+      throw new Error(`The model took longer than ${AI_TIMEOUT_MS / 1000}s to respond. Try again.`);
+    }
+    throw e;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 export function AIPanel({
   ticker,
@@ -22,27 +63,28 @@ export function AIPanel({
   const [loading, setLoading] = React.useState(false);
   const [result, setResult] = React.useState<AIScenarioResult | null>(null);
   const [error, setError] = React.useState<string | null>(null);
+  // Runtime detection: the key can be unset even when the server thought it was enabled.
+  const [notConfigured, setNotConfigured] = React.useState(false);
 
   const generate = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/ai/scenarios", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ticker, expiryIndex }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error ?? `Request failed (${res.status})`);
-      }
-      setResult((await res.json()) as AIScenarioResult);
+      const res = await requestScenarios({ ticker, expiryIndex });
+      setResult(res);
     } catch (e) {
-      setError((e as Error).message);
+      if ((e as Error).message === NOT_CONFIGURED) {
+        setNotConfigured(true);
+      } else {
+        setError((e as Error).message);
+      }
     } finally {
       setLoading(false);
     }
   };
+
+  // Show the graceful "not configured" state if the prop says so or we hit a 503 at runtime.
+  const aiUnavailable = !aiEnabled || notConfigured;
 
   return (
     <Panel>
@@ -57,22 +99,45 @@ export function AIPanel({
           systematically overconfident, so we correct for it by construction.
         </p>
 
-        {!aiEnabled ? (
+        {aiUnavailable ? (
           <div className="rounded-sm border border-line bg-panel2 px-3 py-2 text-[13px] text-faint">
             Set <span className="mono text-muted">ANTHROPIC_API_KEY</span> to enable the AI analyst.
             The rest of the terminal works without it.
           </div>
         ) : (
-          <Button variant="accent" size="sm" onClick={generate} disabled={loading}>
-            <Sparkles className="h-3.5 w-3.5" />
+          <Button variant="accent" size="sm" onClick={generate} disabled={loading} aria-busy={loading}>
+            {loading ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Sparkles className="h-3.5 w-3.5" />
+            )}
             {loading ? "Reasoning…" : result ? "Regenerate" : "Generate scenarios"}
           </Button>
         )}
 
-        {error && (
-          <div className="flex items-start gap-1.5 rounded-sm border border-down/40 bg-down/10 px-3 py-2 text-[13px] text-down">
-            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-            <span>{error}</span>
+        {loading && (
+          <div className="flex items-center gap-1.5 text-[12px] text-faint" role="status">
+            <Loader2 className="h-3 w-3 animate-spin" />
+            <span>Anchoring to the implied distribution… this can take a few seconds.</span>
+          </div>
+        )}
+
+        {error && !aiUnavailable && (
+          <div className="space-y-2 rounded-sm border border-down/40 bg-down/10 px-3 py-2 text-[13px] text-down">
+            <div className="flex items-start gap-1.5">
+              <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+              <span>{error}</span>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={generate}
+              disabled={loading}
+              className="border-down/40 text-down hover:bg-down/10"
+            >
+              <RotateCw className="h-3.5 w-3.5" />
+              Retry
+            </Button>
           </div>
         )}
 
