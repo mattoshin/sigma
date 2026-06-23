@@ -28,7 +28,7 @@ function Seg({
 
 export function SettingsMenu() {
   const [open, setOpen] = React.useState(false);
-  const [theme, setTheme] = React.useState<"light" | "dark">("light");
+  const [theme, setTheme] = React.useState<"light" | "dark">("dark");
   const [cb, setCb] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
 

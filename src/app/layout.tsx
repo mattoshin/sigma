@@ -24,7 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "(function(){try{if(localStorage.getItem('riptide-theme')!=='dark')document.documentElement.classList.add('light');if(localStorage.getItem('riptide-cb')==='1')document.documentElement.classList.add('cb-safe');}catch(e){}})();",
+              "(function(){try{if(localStorage.getItem('riptide-theme')==='light')document.documentElement.classList.add('light');if(localStorage.getItem('riptide-cb')==='1')document.documentElement.classList.add('cb-safe');}catch(e){}})();",
           }}
         />
         <AppShell tape={<TickerTape />}>{children}</AppShell>
