@@ -149,6 +149,22 @@ export interface SubjectiveView {
   spreadMultiplier: number;
 }
 
+/**
+ * Which model produced a view or a tracked call. The four sources the terminal
+ * can put on one axis: the analyst's own view, the sell-side Street consensus,
+ * the AI analyst, and the market-implied (risk-neutral) distribution itself.
+ */
+export type ModelSource = "user" | "street" | "ai" | "market";
+
+/** A named, saved SubjectiveView the analyst can reload and compare in the Arena. */
+export interface ModelPreset {
+  id: string; // `${ticker}:${name}`
+  name: string; // "My Base", "Momentum", "Mean-revert"
+  ticker: string;
+  createdAt: string; // ISO
+  view: SubjectiveView;
+}
+
 // ---------------------------------------------------------------------------
 // Expected value, strategies, sizing, every screen ends here
 // ---------------------------------------------------------------------------

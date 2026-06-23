@@ -4,8 +4,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { TickerHeader } from "./ticker-header";
 import { ExpectedMoveStrip } from "./expected-move-strip";
-import { ScenarioBuilder } from "./scenario-builder";
-import { EdgeCard } from "./edge-card";
+import { ModelLab } from "./model-lab";
 import { VolPanel } from "./vol-panel";
 import { AIPanel } from "./ai-panel";
 import { CompanyFactsPanel } from "./company-facts";
@@ -137,12 +136,13 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
 
           {/* right: the studio, the edge, the bet, the AI */}
           <div className="space-y-4">
-            <ScenarioBuilder
+            <ModelLab
+              ticker={analysis.ticker}
               view={view}
               setView={setView}
+              edge={edge}
               onReset={() => setView(makeDefaultView(analysis.ticker, expiry, analysis.spot))}
             />
-            <EdgeCard edge={edge.edge} />
             <div className="flex justify-end">
               <TrackCallDialog
                 ticker={analysis.ticker}
