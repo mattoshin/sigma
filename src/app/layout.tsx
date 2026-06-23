@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Oshin, research in distributions, not price targets",
+  title: "Riptide, research in distributions, not price targets",
   description:
     "An equity research terminal that puts your view and the options-implied distribution on one axis, quantifies the edge as expected value, and scores your own calibration over time.",
 };
@@ -24,7 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "(function(){try{if(localStorage.getItem('oshin-theme')!=='dark')document.documentElement.classList.add('light');if(localStorage.getItem('sigma-cb')==='1')document.documentElement.classList.add('cb-safe');}catch(e){}})();",
+              "(function(){try{if(localStorage.getItem('riptide-theme')!=='dark')document.documentElement.classList.add('light');if(localStorage.getItem('riptide-cb')==='1')document.documentElement.classList.add('cb-safe');}catch(e){}})();",
           }}
         />
         <AppShell tape={<TickerTape />}>{children}</AppShell>

@@ -1,5 +1,5 @@
 /**
- * Oshin, shared domain types.
+ * Riptide, shared domain types.
  *
  * This file is the single source of truth for every contract in the app. The
  * quant engine, the data layer, the API routes, and every screen import from

@@ -7,7 +7,7 @@
 
 import type { CompanyFacts, FinancialMetric } from "@/lib/types";
 
-const UA = "Oshin Research Demo (matthewoshin@gmail.com)";
+const UA = "Riptide Research Demo (matthewoshin@gmail.com)";
 const HEADERS = { "User-Agent": UA, Accept: "application/json" };
 
 let tickerCikCache: Record<string, string> | null = null;

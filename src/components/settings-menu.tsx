@@ -56,12 +56,12 @@ export function SettingsMenu() {
   const applyTheme = (t: "light" | "dark") => {
     setTheme(t);
     document.documentElement.classList.toggle("light", t === "light");
-    localStorage.setItem("oshin-theme", t);
+    localStorage.setItem("riptide-theme", t);
   };
   const applyCb = (on: boolean) => {
     setCb(on);
     document.documentElement.classList.toggle("cb-safe", on);
-    localStorage.setItem("sigma-cb", on ? "1" : "0");
+    localStorage.setItem("riptide-cb", on ? "1" : "0");
   };
 
   return (

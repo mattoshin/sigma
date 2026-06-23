@@ -38,12 +38,12 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
       <div className="flex min-h-full flex-col">
         <div className="sticky top-0 z-40 bg-canvas/95 backdrop-blur">
           <header className="flex h-12 items-center gap-5 border-b border-line px-4">
-            {/* wordmark, a distribution-curve mark + OSHIN */}
+            {/* wordmark, a distribution-curve mark + RIPTIDE */}
             <Link href="/" className="flex items-center gap-2">
               <svg viewBox="0 0 24 16" className="h-4 w-6 text-accent" fill="none" stroke="currentColor" strokeWidth={2.25} aria-hidden>
                 <path d="M1 15 C 6 15, 8 2, 12 2 S 18 15, 23 15" strokeLinecap="round" />
               </svg>
-              <span className="mono text-base font-bold tracking-[0.22em] text-fg">OSHIN</span>
+              <span className="mono text-base font-bold tracking-[0.22em] text-fg">RIPTIDE</span>
               <span className="eyebrow ml-1 hidden md:inline">distributions · ev · edge</span>
             </Link>
 
@@ -89,7 +89,7 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
                 </TooltipTrigger>
                 <TooltipContent>
                   Runs on baked, delayed/illustrative snapshots so it never breaks live. Set
-                  OSHIN_FORCE_LIVE=1 to pull live chains for any ticker.
+                  RIPTIDE_FORCE_LIVE=1 to pull live chains for any ticker.
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -101,7 +101,7 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
 
         <footer className="border-t border-line px-4 py-3">
           <span className="eyebrow">
-            Oshin · research in distributions · data delayed / illustrative · not investment advice
+            Riptide · research in distributions · data delayed / illustrative · not investment advice
           </span>
         </footer>
       </div>

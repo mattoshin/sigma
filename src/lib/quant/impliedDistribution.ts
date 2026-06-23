@@ -1,5 +1,5 @@
 /**
- * The risk-neutral density (RND), the analytical heart of Oshin.
+ * The risk-neutral density (RND), the analytical heart of Riptide.
  *
  * Method (Breeden-Litzenberger via the Shimko 1993 implied-vol-spline route):
  *   1. For each strike, take the liquid OTM option (put below spot, call above)
