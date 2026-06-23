@@ -41,7 +41,12 @@ export function totalVariation(a: Distribution, b: Distribution): number {
   let acc = 0;
   for (let i = 1; i < n; i++) {
     const dx = pa[i].price - pa[i - 1].price;
-    acc += Math.abs(pa[i].density - pb[i].density) * dx;
+    // Trapezoid rule on |f_a − f_b|, consistent with trapz() in the quant layer.
+    const absDiff =
+      (Math.abs(pa[i].density - pb[i].density) +
+        Math.abs(pa[i - 1].density - pb[i - 1].density)) /
+      2;
+    acc += absDiff * dx;
   }
   return Math.min(1, 0.5 * acc);
 }

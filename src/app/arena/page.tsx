@@ -29,7 +29,7 @@ export default async function ArenaPage() {
     const subset: TrackedCall[] =
       m.source === "market"
         ? calls
-            .filter((c) => typeof c.marketImpliedProb === "number")
+            .filter((c) => Number.isFinite(c.marketImpliedProb))
             .map((c) => ({ ...c, predictedProb: c.marketImpliedProb as number }))
         : calls.filter((c) => (c.modelSource ?? "user") === m.source);
     return { ...m, cal: calibrate(subset) };
