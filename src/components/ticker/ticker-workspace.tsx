@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { TickerHeader } from "./ticker-header";
 import { ExpectedMoveStrip } from "./expected-move-strip";
 import { ModelLab } from "./model-lab";
+import { ModelArena } from "./model-arena";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { VolPanel } from "./vol-panel";
 import { AIPanel } from "./ai-panel";
 import { CompanyFactsPanel } from "./company-facts";
@@ -146,42 +148,61 @@ export function TickerWorkspace({ analysis, aiEnabled }: { analysis: TickerAnaly
             </div>
           </div>
 
-          {/* right: the studio, the edge, the bet, the AI */}
-          <div className="space-y-4">
-            <ModelLab
-              ticker={analysis.ticker}
-              view={view}
-              setView={setUserView}
-              edge={edge}
-              onReset={() => setUserView(makeDefaultView(analysis.ticker, expiry, analysis.spot))}
-            />
-            <div className="flex justify-end">
-              <TrackCallDialog
-                ticker={analysis.ticker}
-                horizon={expiry.expiry}
-                forward={expiry.forward}
-                subjectiveProbAbove={subjForwardProb}
-                marketProbAbove={mktForwardProb}
-                modelSource={activeSource}
-              />
-            </div>
-            {analysis.analysts && (
-              <StreetPanel
-                analysts={analysis.analysts}
-                spot={analysis.spot}
-                ratingActions={analysis.ratingActions}
-                onSeed={() => {
-                  setView(makeViewFromStreet(analysis.ticker, expiry, analysis.spot, analysis.analysts!));
-                  setActiveSource("street");
-                }}
-              />
-            )}
-            <AIPanel
-              ticker={analysis.ticker}
-              expiryIndex={expiryIdx}
-              aiEnabled={aiEnabled}
-              onApply={applyAI}
-            />
+          {/* right: author a model in the Lab, then stack them all in the Arena */}
+          <div>
+            <Tabs defaultValue="lab">
+              <TabsList>
+                <TabsTrigger value="lab">Model Lab</TabsTrigger>
+                <TabsTrigger value="arena">Arena</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="lab" className="space-y-4 pt-4">
+                <ModelLab
+                  ticker={analysis.ticker}
+                  view={view}
+                  setView={setUserView}
+                  edge={edge}
+                  onReset={() => setUserView(makeDefaultView(analysis.ticker, expiry, analysis.spot))}
+                />
+                <div className="flex justify-end">
+                  <TrackCallDialog
+                    ticker={analysis.ticker}
+                    horizon={expiry.expiry}
+                    forward={expiry.forward}
+                    subjectiveProbAbove={subjForwardProb}
+                    marketProbAbove={mktForwardProb}
+                    modelSource={activeSource}
+                  />
+                </div>
+                {analysis.analysts && (
+                  <StreetPanel
+                    analysts={analysis.analysts}
+                    spot={analysis.spot}
+                    ratingActions={analysis.ratingActions}
+                    onSeed={() => {
+                      setView(makeViewFromStreet(analysis.ticker, expiry, analysis.spot, analysis.analysts!));
+                      setActiveSource("street");
+                    }}
+                  />
+                )}
+                <AIPanel
+                  ticker={analysis.ticker}
+                  expiryIndex={expiryIdx}
+                  aiEnabled={aiEnabled}
+                  onApply={applyAI}
+                />
+              </TabsContent>
+
+              <TabsContent value="arena" className="pt-4">
+                <ModelArena
+                  analysis={analysis}
+                  expiry={expiry}
+                  expiryIndex={expiryIdx}
+                  userView={view}
+                  aiEnabled={aiEnabled}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>

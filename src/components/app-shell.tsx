@@ -13,6 +13,7 @@ import { SettingsMenu } from "@/components/settings-menu";
 const NAV = [
   { label: "Terminal", href: "/" },
   { label: "Screener", href: "/screener" },
+  { label: "Arena", href: "/arena" },
   { label: "Portfolio", href: "/portfolio" },
   { label: "Calibration", href: "/calibration" },
   { label: "Methodology", href: "/methodology" },
