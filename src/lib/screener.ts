@@ -11,6 +11,8 @@
 import { UNIVERSE } from "@/lib/config";
 import { buildTickerAnalysis } from "@/lib/analysis";
 import { loadSnapshot } from "@/lib/data/snapshots";
+import { computeEdge, makeViewFromStreet } from "@/lib/edge";
+import { totalVariation } from "@/lib/arena";
 import type { Catalyst } from "@/lib/types";
 
 export interface TapeRow {
@@ -60,4 +62,72 @@ export async function getScreenerRows(): Promise<ScreenerRowFull[]> {
     }),
   );
   return rows.sort((x, y) => y.vrp - x.vrp);
+}
+
+// ---------------------------------------------------------------------------
+// Edge Radar, the agentic scan, where a model's distribution disagrees most
+// with what the options market is pricing.
+// ---------------------------------------------------------------------------
+
+export interface EdgeRadarRow {
+  ticker: string;
+  name: string;
+  spot: number;
+  forward: number;
+  /** E[S_T] under the model's distribution. */
+  modelMean: number;
+  /** (modelMean − forward) / forward, the signed directional mispricing. */
+  edgePct: number;
+  /** Best non-stock structure to express the gap, and its EV edge as % of cost. */
+  bestStructure: string;
+  bestStructureEdgePct: number;
+  /** Total-variation distance between the model and the implied density, 0..1. */
+  divergenceScore: number;
+  delayed: boolean;
+}
+
+/**
+ * Run the Street's distribution against the options-implied density across the
+ * whole universe and rank by the size of the disagreement. The Street view
+ * carries a real directional drift (analyst targets) and dispersion, so unlike a
+ * symmetric default view it genuinely parts ways with what options price. Names
+ * without sell-side coverage are skipped.
+ */
+export async function getEdgeRadarRows(): Promise<EdgeRadarRow[]> {
+  const rows = await Promise.all(
+    UNIVERSE.map(async (u): Promise<EdgeRadarRow | null> => {
+      const a = await buildTickerAnalysis(u.ticker);
+      const exp = a.expiries.find((e) => e.dte >= 25 && e.dte <= 45) ?? a.expiries[0];
+      if (!exp || !a.analysts) return null;
+
+      const view = makeViewFromStreet(a.ticker, exp, a.spot, a.analysts);
+      const { subjective, edge } = computeEdge(
+        view,
+        exp,
+        a.spot,
+        a.riskFreeRate,
+        a.dividendYield,
+      );
+      const best = [...edge.strategies]
+        .filter((s) => s.label !== "Long stock")
+        .sort((x, y) => (y.evEdge ?? 0) - (x.evEdge ?? 0))[0];
+
+      return {
+        ticker: u.ticker,
+        name: u.name,
+        spot: a.spot,
+        forward: exp.forward,
+        modelMean: subjective.mean,
+        edgePct: edge.ev.edgePct,
+        bestStructure: best?.label ?? "-",
+        bestStructureEdgePct: best?.evEdgePct ?? 0,
+        divergenceScore: totalVariation(subjective, exp.rnd),
+        delayed: a.quote.delayed,
+      };
+    }),
+  );
+
+  return rows
+    .filter((r): r is EdgeRadarRow => r !== null)
+    .sort((x, y) => Math.abs(y.edgePct) - Math.abs(x.edgePct));
 }
