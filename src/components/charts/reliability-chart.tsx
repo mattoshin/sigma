@@ -9,6 +9,8 @@ import type { CalibrationBin } from "@/lib/types";
 interface Props {
   bins: CalibrationBin[];
   height?: number;
+  /** Series color; defaults to the terminal's single accent (Calibration page). */
+  color?: string;
 }
 
 /**
@@ -16,7 +18,7 @@ interface Props {
  * happens X% of the time. Points below the diagonal = overconfident (predicted
  * more than occurred); above = underconfident.
  */
-export function ReliabilityChart({ bins, height = 280 }: Props) {
+export function ReliabilityChart({ bins, height = 280, color = "var(--accent)" }: Props) {
   const [ref, width] = useChartWidth();
   const pad = 34;
   const side = Math.min(width, height) - pad;
@@ -55,7 +57,7 @@ export function ReliabilityChart({ bins, height = 280 }: Props) {
           <polyline
             points={bins.map((b) => `${x(b.predictedAvg)},${y(b.observedFreq)}`).join(" ")}
             fill="none"
-            stroke="var(--accent)"
+            stroke={color}
             strokeWidth={1.25}
             opacity={0.7}
           />
@@ -68,9 +70,9 @@ export function ReliabilityChart({ bins, height = 280 }: Props) {
             cx={x(b.predictedAvg)}
             cy={y(b.observedFreq)}
             r={4 + 8 * (b.count / maxCount)}
-            fill="var(--accent)"
+            fill={color}
             fillOpacity={0.45}
-            stroke="var(--accent)"
+            stroke={color}
             strokeWidth={1}
           />
         ))}

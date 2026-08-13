@@ -102,7 +102,7 @@ export default async function ArenaPage() {
                 <span className="text-[12px] text-faint">{m.cal.resolvedCount} calls</span>
               </PanelHeader>
               <PanelBody>
-                <ReliabilityChart bins={m.cal.bins} />
+                <ReliabilityChart bins={m.cal.bins} color={MODEL_COLOR[m.source]} />
               </PanelBody>
             </Panel>
           ))}
