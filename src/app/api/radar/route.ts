@@ -3,6 +3,7 @@ import { UNIVERSE } from "@/lib/config";
 import { buildTickerAnalysis } from "@/lib/analysis";
 import { computeEdge, makeViewFromStreet } from "@/lib/edge";
 import { totalVariation } from "@/lib/arena";
+import { annualizedVolFromStdev } from "@/lib/radar-math";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +28,7 @@ export async function GET() {
           a.dividendYield,
         );
 
-        const annualizedVol = (subjective.stdev / a.spot) / Math.sqrt(exp.dte / 365);
+        const annualizedVol = annualizedVolFromStdev(subjective.stdev, a.spot, exp.dte);
 
         return {
           ticker: u.ticker,
