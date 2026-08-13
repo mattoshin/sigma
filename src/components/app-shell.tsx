@@ -15,7 +15,6 @@ const NAV = [
   { label: "Screener", href: "/screener" },
   { label: "Radar", href: "/radar" },
   { label: "Arena", href: "/arena" },
-  { label: "Portfolio", href: "/portfolio" },
   { label: "Calibration", href: "/calibration" },
   { label: "Methodology", href: "/methodology" },
 ];
