@@ -23,6 +23,7 @@ And the single highest-credibility detail: the implied density is labeled **risk
 
 ## What's in it
 
+- **AI Morning Scan** (`/`), a one-click four-stage scan across 16 bundled stocks and ETFs that ranks the three largest Street-vs-options distribution gaps and progressively reveals a pre-generated Codex research brief. The public route makes no model or market-data calls.
 - **Distribution studio** (`/t/[ticker]`), the analyst's Bull/Base/Bear view rendered as a smooth density, overlaid on the options-implied risk-neutral density (Breeden-Litzenberger). The divergence is shaded as edge; hover reads "the market's odds vs your odds at every price."
 - **Edge & EV**, every view ends in an expected value, a strategy comparison (long stock / ATM call / OTM call / ATM put priced under your density vs market cost), and a half-Kelly size.
 - **Expected-move strip**, implied move into the next catalyst by two reconciling methods (IV and `0.85 × straddle`), with an IV-crush estimate for earnings expiries.
@@ -67,6 +68,14 @@ Regenerate the snapshots with:
 node scripts/gen-snapshots.mjs
 ```
 
+To refresh the saved Morning Scan brief, start the app and run:
+
+```bash
+pnpm generate:morning-scan
+```
+
+The generator uses local Codex, validates ticker order and evidence IDs, and keeps the previous artifact if runtime validation fails.
+
 ---
 
 ## The quant engine
@@ -74,7 +83,7 @@ node scripts/gen-snapshots.mjs
 Pure, dependency-free TypeScript in `src/lib/quant/`, unit-tested in `src/lib/quant/quant.test.ts`. The headline test feeds the Breeden-Litzenberger pipeline a chain priced off a *flat* implied-vol surface and asserts it recovers the closed-form Black-Scholes lognormal density, the correctness contract.
 
 ```bash
-pnpm test         # 12 proof tests
+pnpm test
 pnpm typecheck
 pnpm build
 ```

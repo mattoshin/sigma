@@ -13,7 +13,7 @@ import { buildTickerAnalysis } from "@/lib/analysis";
 import { loadSnapshot } from "@/lib/data/snapshots";
 import { computeEdge, makeViewFromStreet } from "@/lib/edge";
 import { totalVariation } from "@/lib/arena";
-import type { Catalyst } from "@/lib/types";
+import type { Catalyst, Distribution } from "@/lib/types";
 
 export interface TapeRow {
   ticker: string;
@@ -42,10 +42,10 @@ export interface ScreenerRowFull {
   changePct: number;
 }
 
-export async function getScreenerRows(): Promise<ScreenerRowFull[]> {
+export async function getScreenerRows(options: { snapshotOnly?: boolean } = {}): Promise<ScreenerRowFull[]> {
   const rows = await Promise.all(
     UNIVERSE.map(async (u) => {
-      const a = await buildTickerAnalysis(u.ticker);
+      const a = await buildTickerAnalysis(u.ticker, options);
       const ref = a.expiries.find((e) => e.dte >= 25 && e.dte <= 45) ?? a.expiries[0];
       return {
         ticker: u.ticker,
@@ -83,7 +83,52 @@ export interface EdgeRadarRow {
   bestStructureEdgePct: number;
   /** Total-variation distance between the model and the implied density, 0..1. */
   divergenceScore: number;
+  atmIV: number;
+  realizedVol: number;
+  vrp: number;
+  expectedMovePct: number;
+  dte: number;
+  nextCatalyst?: Catalyst;
+  curves?: {
+    market: { price: number; density: number }[];
+    street: { price: number; density: number }[];
+  };
   delayed: boolean;
+}
+
+export function compareEdgeSignals(
+  x: Pick<EdgeRadarRow, "ticker" | "edgePct" | "divergenceScore">,
+  y: Pick<EdgeRadarRow, "ticker" | "edgePct" | "divergenceScore">,
+): number {
+  return (
+    y.divergenceScore - x.divergenceScore ||
+    Math.abs(y.edgePct) - Math.abs(x.edgePct) ||
+    x.ticker.localeCompare(y.ticker)
+  );
+}
+
+function downsampleCurve(distribution: Distribution): { price: number; density: number }[] {
+  const step = Math.max(1, Math.ceil(distribution.points.length / 48));
+  return distribution.points
+    .filter((_, index) => index % step === 0)
+    .map((point) => ({ price: point.price, density: point.density }));
+}
+
+function chartCurves(
+  marketDistribution: Distribution,
+  streetDistribution: Distribution,
+): NonNullable<EdgeRadarRow["curves"]> {
+  const market = downsampleCurve(marketDistribution);
+  const street = downsampleCurve(streetDistribution);
+  const sharedMax = Math.max(
+    ...market.map((point) => point.density),
+    ...street.map((point) => point.density),
+    1e-9,
+  );
+  const normalize = (points: { price: number; density: number }[]) =>
+    points.map((point) => ({ ...point, density: point.density / sharedMax }));
+
+  return { market: normalize(market), street: normalize(street) };
 }
 
 /**
@@ -93,10 +138,12 @@ export interface EdgeRadarRow {
  * symmetric default view it genuinely parts ways with what options price. Names
  * without sell-side coverage are skipped.
  */
-export async function getEdgeRadarRows(): Promise<EdgeRadarRow[]> {
+export async function getEdgeRadarRows(
+  options: { snapshotOnly?: boolean; includeCurves?: boolean } = {},
+): Promise<EdgeRadarRow[]> {
   const rows = await Promise.all(
     UNIVERSE.map(async (u): Promise<EdgeRadarRow | null> => {
-      const a = await buildTickerAnalysis(u.ticker);
+      const a = await buildTickerAnalysis(u.ticker, options);
       const exp = a.expiries.find((e) => e.dte >= 25 && e.dte <= 45) ?? a.expiries[0];
       if (!exp || !a.analysts) return null;
 
@@ -122,6 +169,13 @@ export async function getEdgeRadarRows(): Promise<EdgeRadarRow[]> {
         bestStructure: best?.label ?? "-",
         bestStructureEdgePct: best?.evEdgePct ?? 0,
         divergenceScore: totalVariation(subjective, exp.rnd),
+        atmIV: exp.atmIV,
+        realizedVol: a.realizedVol30,
+        vrp: a.vrp.vrp,
+        expectedMovePct: exp.expectedMove.movePct,
+        dte: exp.dte,
+        nextCatalyst: a.catalysts.find((c) => c.date <= exp.expiry),
+        curves: options.includeCurves ? chartCurves(exp.rnd, subjective) : undefined,
         delayed: a.quote.delayed,
       };
     }),
@@ -129,5 +183,5 @@ export async function getEdgeRadarRows(): Promise<EdgeRadarRow[]> {
 
   return rows
     .filter((r): r is EdgeRadarRow => r !== null)
-    .sort((x, y) => Math.abs(y.edgePct) - Math.abs(x.edgePct));
+    .sort(compareEdgeSignals);
 }

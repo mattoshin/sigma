@@ -82,6 +82,14 @@ const UNIVERSE = [
   { ticker: "MSFT", name: "Microsoft Corp.", sector: "Technology", hero: false, spot: 478.2, atmVol: 0.231, skew: 0.42, curv: 1.0, q: 0.007, earningsDte: 21 },
   { ticker: "AMD", name: "Advanced Micro Devices", sector: "Semiconductors", hero: false, spot: 168.5, atmVol: 0.468, skew: 0.45, curv: 1.3, q: 0.0, earningsDte: 26 },
   { ticker: "META", name: "Meta Platforms Inc.", sector: "Technology", hero: false, spot: 642.1, atmVol: 0.338, skew: 0.44, curv: 1.2, q: 0.004, earningsDte: 15 },
+  { ticker: "AMZN", name: "Amazon.com Inc.", sector: "Consumer", hero: false, spot: 226.4, atmVol: 0.314, skew: 0.43, curv: 1.15, q: 0.0, earningsDte: 22 },
+  { ticker: "GOOGL", name: "Alphabet Inc.", sector: "Technology", hero: false, spot: 201.8, atmVol: 0.287, skew: 0.46, curv: 1.1, q: 0.004, earningsDte: 19 },
+  { ticker: "AVGO", name: "Broadcom Inc.", sector: "Semiconductors", hero: false, spot: 342.7, atmVol: 0.391, skew: 0.48, curv: 1.25, q: 0.007, earningsDte: 13 },
+  { ticker: "NFLX", name: "Netflix Inc.", sector: "Communication", hero: false, spot: 124.6, atmVol: 0.354, skew: 0.38, curv: 1.3, q: 0.0, earningsDte: 27 },
+  { ticker: "JPM", name: "JPMorgan Chase & Co.", sector: "Financials", hero: false, spot: 289.3, atmVol: 0.238, skew: 0.54, curv: 1.0, q: 0.019, earningsDte: 24 },
+  { ticker: "LLY", name: "Eli Lilly and Co.", sector: "Healthcare", hero: false, spot: 782.5, atmVol: 0.326, skew: 0.47, curv: 1.2, q: 0.007, earningsDte: 11 },
+  { ticker: "COIN", name: "Coinbase Global Inc.", sector: "Financials", hero: false, spot: 329.8, atmVol: 0.684, skew: 0.34, curv: 1.6, q: 0.0, earningsDte: 17 },
+  { ticker: "PLTR", name: "Palantir Technologies", sector: "Technology", hero: false, spot: 184.2, atmVol: 0.512, skew: 0.36, curv: 1.45, q: 0.0, earningsDte: 14 },
 ];
 
 const R = 0.043; // risk-free rate
@@ -95,6 +103,14 @@ const FACTS = {
   MSFT: { cik: "0000789019", rev: 281_700, ni: 104_500 },
   AMD: { cik: "0000002488", rev: 31_200, ni: 2_900 },
   META: { cik: "0001326801", rev: 178_400, ni: 73_100 },
+  AMZN: { cik: "0001018724", rev: 638_000, ni: 59_200 },
+  GOOGL: { cik: "0001652044", rev: 350_000, ni: 100_100 },
+  AVGO: { cik: "0001730168", rev: 57_000, ni: 18_700 },
+  NFLX: { cik: "0001065280", rev: 43_500, ni: 10_100 },
+  JPM: { cik: "0000019617", rev: 177_000, ni: 58_500 },
+  LLY: { cik: "0000059478", rev: 50_900, ni: 12_200 },
+  COIN: { cik: "0001679788", rev: 7_200, ni: 2_600 },
+  PLTR: { cik: "0001321655", rev: 4_500, ni: 1_250 },
 };
 
 // --- builders -------------------------------------------------------------
@@ -160,7 +176,7 @@ function buildHistory(cfg) {
     logs.push(logs[i - 1] + drift - 0.5 * dailyVol * dailyVol + dailyVol * z);
   }
   const finalLog = logs[n - 1];
-  const bars = logs.map((l, i) => {
+  const bars = logs.map((l) => {
     const close = spot * Math.exp(l - finalLog);
     const intraday = close * dailyVol * (0.6 + 0.8 * rnd());
     const open = close * (1 + dailyVol * (rnd() - 0.5));

@@ -12,9 +12,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Riptide, research in distributions, not price targets",
+  title: "Riptide, AI-powered research in distributions",
   description:
-    "An equity research terminal that puts your view and the options-implied distribution on one axis, quantifies the edge as expected value, and scores your own calibration over time.",
+    "Run an AI Morning Scan across options-implied and Street distributions, rank the widest gaps, and turn research into expected value.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

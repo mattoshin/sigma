@@ -8,7 +8,7 @@
  * recomputed client-side (see lib/edge.ts) for instant slider feedback.
  */
 
-import { getTickerBundle } from "@/lib/data";
+import { getSnapshotBundle, getTickerBundle } from "@/lib/data";
 import { universeEntry, FMP_ENABLED } from "@/lib/config";
 import { riskNeutralDensity, probAbove } from "@/lib/quant/impliedDistribution";
 import { expectedMove } from "@/lib/quant/expectedMove";
@@ -81,11 +81,22 @@ function trimExpiry(exp: OptionExpiry, spot: number): OptionExpiry {
   };
 }
 
-export async function buildTickerAnalysis(ticker: string): Promise<TickerAnalysis> {
-  const bundle = await getTickerBundle(ticker);
+export interface AnalysisOptions {
+  /** Use only baked snapshots. This path never touches FRED, FMP, or Yahoo. */
+  snapshotOnly?: boolean;
+}
+
+export async function buildTickerAnalysis(
+  ticker: string,
+  options: AnalysisOptions = {},
+): Promise<TickerAnalysis> {
+  const bundle = options.snapshotOnly
+    ? getSnapshotBundle(ticker)
+    : await getTickerBundle(ticker);
+  if (!bundle) throw new Error(`No snapshot for ${ticker.toUpperCase()}`);
   const chain = bundle.chain.data;
   const spot = chain.spot;
-  const liveR = await getRiskFreeRate();
+  const liveR = options.snapshotOnly ? null : await getRiskFreeRate();
   const r = liveR ?? chain.riskFreeRate;
   const riskFreeSource: "fred" | "default" = liveR != null ? "fred" : "default";
   const q = chain.dividendYield;
@@ -148,7 +159,7 @@ export async function buildTickerAnalysis(ticker: string): Promise<TickerAnalysi
   let ratingActions: RatingAction[] = [];
   let dcf: DcfValue | null = null;
   let keyRatios: KeyRatio[] = [];
-  if (FMP_ENABLED) {
+  if (FMP_ENABLED && !options.snapshotOnly) {
     const [ra, d, kr] = await Promise.all([
       getRatingActions(bundle.ticker).catch(() => []),
       getDcf(bundle.ticker).catch(() => null),

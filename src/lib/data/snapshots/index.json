@@ -46,5 +46,53 @@
     "name": "Meta Platforms Inc.",
     "sector": "Technology",
     "hero": false
+  },
+  {
+    "ticker": "AMZN",
+    "name": "Amazon.com Inc.",
+    "sector": "Consumer",
+    "hero": false
+  },
+  {
+    "ticker": "GOOGL",
+    "name": "Alphabet Inc.",
+    "sector": "Technology",
+    "hero": false
+  },
+  {
+    "ticker": "AVGO",
+    "name": "Broadcom Inc.",
+    "sector": "Semiconductors",
+    "hero": false
+  },
+  {
+    "ticker": "NFLX",
+    "name": "Netflix Inc.",
+    "sector": "Communication",
+    "hero": false
+  },
+  {
+    "ticker": "JPM",
+    "name": "JPMorgan Chase & Co.",
+    "sector": "Financials",
+    "hero": false
+  },
+  {
+    "ticker": "LLY",
+    "name": "Eli Lilly and Co.",
+    "sector": "Healthcare",
+    "hero": false
+  },
+  {
+    "ticker": "COIN",
+    "name": "Coinbase Global Inc.",
+    "sector": "Financials",
+    "hero": false
+  },
+  {
+    "ticker": "PLTR",
+    "name": "Palantir Technologies",
+    "sector": "Technology",
+    "hero": false
   }
 ]

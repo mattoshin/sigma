@@ -22,11 +22,11 @@ The main event is a cinematic AI Morning Scan. One click visibly moves through f
 1. Load option chains.
 2. Reconstruct implied distributions.
 3. Rank the largest probability gaps.
-4. Stream a concise Claude research brief.
+4. Stream a concise AI research brief.
 
 The visitor sees the system move from raw market inputs to a prioritized research queue. This demonstrates quantitative modeling, data engineering, interaction design, and applied AI in one short sequence.
 
-The AI is useful because it allocates attention. It does not manufacture prices, probabilities, or expected values. Those values come from deterministic Riptide calculations. Claude explains why the three computed gaps may matter and what a researcher should inspect next.
+The AI is useful because it allocates attention. It does not manufacture prices, probabilities, or expected values. Those values come from deterministic Riptide calculations. A build-time Codex artifact explains why the three computed gaps may matter and what a researcher should inspect next.
 
 ## Constraints
 
@@ -72,7 +72,7 @@ The homepage runs a four-stage scan, reveals the top three ranked opportunities,
 **Tradeoffs**
 
 - Requires careful orchestration of progressive states.
-- Needs a clearly labeled fallback when the AI provider is unavailable.
+- Needs a clearly labeled fallback when the saved AI artifact is invalid or stale.
 - Snapshot expansion requires internally consistent data fixtures.
 
 ### B. AI Ticker Spotlight
@@ -164,49 +164,41 @@ The event contract should be small and typed:
 
 ```ts
 type MorningScanEvent =
-  | { type: "stage"; stage: "chains" | "distributions" | "ranking" | "ai" }
-  | { type: "ranking"; rows: MorningScanRow[] }
+  | { type: "stage"; stage: "chains" | "distributions" | "ranking" | "ai"; status: "running" | "complete" }
+  | { type: "ranking"; row: MorningScanRow }
   | { type: "text_delta"; text: string }
-  | { type: "complete"; model: string; asOf: string; provenance: string }
-  | {
-      type: "fallback";
-      reason: string;
-      brief: string;
-      model: null;
-      asOf: string;
-      provenance: string;
-    }
-  | { type: "error"; code: "analysis_failed"; message: string };
+  | { type: "complete"; rows: MorningScanRow[]; brief: MorningScanBrief; asOf: string; universeSize: number; durationMs: number; snapshotCohort: string }
+  | { type: "error"; message: string };
 
 interface MorningScanRow {
   ticker: string;
   name: string;
   spot: number;
   forward: number;
-  modelMean: number;
+  streetMean: number;
   edgePct: number;
   divergenceScore: number;
   expectedMovePct: number;
   bestStructure: string;
   bestStructureEdgePct: number;
-  modelSource: "street";
   snapshotAsOf: string;
+  curves: { market: CurvePoint[]; street: CurvePoint[] };
 }
 ```
 
 Rank rows descending by `divergenceScore`, then descending by `abs(edgePct)`, then alphabetically by ticker. Return the first three rows. This keeps the product promise aligned with the actual ranking: Riptide prioritizes the largest probability-distribution disagreements, while directional price edge breaks ties.
 
-The server computes and ranks the quantitative rows from a snapshot-only analysis mode that performs zero FRED, FMP, Yahoo, Alpaca, Anthropic, or other external requests in the public route. A developer-only generation script sends the ranked rows plus snapshot-backed catalysts and company facts already present in `TickerAnalysis` to Claude when a new snapshot cohort is prepared. The prompt requires explanations to be framed as hypotheses and forbids current-news claims.
+The server computes and ranks the quantitative rows from a snapshot-only analysis mode that performs zero FRED, FMP, Yahoo, Alpaca, Anthropic, OpenAI, or other external requests in the public route. A developer-only generation workflow sends the ranked rows and their snapshot-backed evidence, including catalysts when available, to an AI model when a new snapshot cohort is prepared. The current portfolio artifact was produced with OpenAI Codex. The prompt requires explanations to be framed as hypotheses and forbids current-news claims.
 
-Claude returns one tool-use object shaped as `{ summary, items: [{ ticker, reason, nextQuestion, evidenceIds }] }`. Every supplied catalyst and company fact has a server-assigned evidence ID. The strict Zod schema rejects unknown fields and requires exactly one item for each computed top-three ticker in ranking order. Duplicate, missing, reordered, or unknown tickers are invalid. Every returned evidence ID must belong to that ticker's supplied facts. Model prose is explicitly labeled as an AI-generated hypothesis because schema validation cannot prove semantic entailment. Evidence facts render separately from server-owned snapshot data, so model prose is never presented as the factual source.
+The model returns one structured object shaped as `{ summary, items: [{ ticker, thesis, nextQuestion, evidenceIds }] }`. Every supplied catalyst and company fact has a server-assigned evidence ID. The strict Zod schema rejects unknown fields and requires exactly one item for each computed top-three ticker in ranking order. Duplicate, missing, reordered, or unknown tickers are invalid. Every returned evidence ID must belong to that ticker's supplied facts. Model prose is explicitly labeled as an AI-generated hypothesis because schema validation cannot prove semantic entailment. Evidence facts render separately from server-owned snapshot data, so model prose is never presented as the factual source.
 
-The generation script caps Claude output at 700 tokens and writes a validated artifact containing `model`, `generatedAt`, `promptVersion`, `schemaVersion`, `inputDigest`, and the structured brief. `inputDigest` is a SHA-256 digest of canonical JSON containing the complete ranked rows, evidence payload, model identifier, prompt version, and artifact schema version. The generator and route share one canonicalization and hashing function. The public route recomputes the digest, requires exact expected metadata values, and uses the artifact only on a complete match. A missing, invalid, incompatible, or stale artifact produces the deterministic server-generated fallback brief.
+The generation workflow caps each narrative field, writes an artifact containing `model`, `generatedAt`, `promptVersion`, `schemaVersion`, `inputDigest`, and the structured brief, then runs the runtime validation suite before accepting the file. `inputDigest` is a SHA-256 digest of canonical JSON containing the complete ranked rows, evidence payload, model identifier, prompt version, and artifact schema version. The route owns canonicalization and hashing, while the generator records the route's digest and shares the same version metadata file. The public route recomputes the digest, requires exact expected metadata values, and uses the artifact only on a complete match. A missing, invalid, incompatible, or stale artifact produces the deterministic server-generated fallback brief.
 
-The public route accepts no user-authored prompt or ticker payload. It enforces a same-origin request check and a small request-body limit. A deployment-level Vercel Firewall rule rate-limits `POST /api/ai/morning-scan` by IP and rejects bursts before server execution. After validating the bundled artifact, the endpoint emits its approved text as progressive `text_delta` events for the cinematic reveal. Financial values are never accepted from the model artifact. All numbers rendered in result cards come from the current computed rows. The UI labels the model, generation time, snapshot cohort, and content as an AI-generated hypothesis.
+The public route accepts no user-authored prompt or ticker payload. It enforces a same-origin request check, a small request-body limit, and a capped in-memory per-instance burst limiter. A deployment-level Vercel Firewall rule is recommended before broader promotion but is not required for the current zero-model-call demo route. After validating the bundled artifact, the endpoint emits its approved text as progressive `text_delta` events for the cinematic reveal. Financial values are never accepted from the model artifact. All numbers rendered in result cards come from the current computed rows. The UI labels the model, generation time, snapshot cohort, and content as an AI-generated hypothesis.
 
-The existing radar commentary prompt should be extracted into a shared research-brief service so the new route does not create a second incompatible explanation system. The existing scenario route remains available inside ticker workspaces for deeper exploration.
+The existing runtime radar commentary remains separate from the pre-generated Morning Scan artifact because the two surfaces have different reliability and trust boundaries. The existing scenario route remains available inside ticker workspaces for deeper exploration.
 
-All 16 bundled snapshots belong to one declared cohort timestamp. Quote, history, analyst data, and at least one 25-to-45-day option expiry for every ticker must be captured or generated for that cohort. The route emits this shared timestamp as `asOf`, while each row retains it as `snapshotAsOf` for auditability. Fixture validation runs during tests and fails if any symbol cannot produce a valid row or fewer than three rows remain after analysis.
+All 16 bundled snapshots belong to one declared cohort. Quote, history, analyst data, and at least one 25-to-45-day option expiry for every ticker must be captured or generated for that cohort. The route emits the cohort ID as `snapshotCohort`, the computation timestamp as `asOf`, and the shared snapshot timestamp on every row as `snapshotAsOf`. Fixture validation runs during tests and fails if any symbol cannot produce a valid row or fewer than three rows remain after analysis.
 
 ### Live Data Extension
 
@@ -220,16 +212,16 @@ Optional Alpaca lookup is Phase 2 and is not part of this portfolio-demo impleme
 
 - Start visual feedback within 150 milliseconds of the click.
 - Compute the ranking before revealing the bundled brief.
-- The 12-second deadline begins when the user activates the CTA and covers snapshot analysis, artifact validation, and NDJSON delivery.
-- On artifact or stream timeout, preserve the computed ranking and assemble fallback copy server-side from the current top-three rows using fixed templates. Label it `Demo brief, AI artifact unavailable`. It contains no model-generated or externally sourced claims.
+- The server's 12-second deadline begins when the request reaches the route and covers snapshot analysis, artifact validation, staged reveal delays, and NDJSON delivery. The client enters its running state immediately on CTA activation.
+- On artifact or stream timeout after ranking, preserve the computed rows and finish with one `complete` event containing a deterministic brief. Label it `Demo brief, AI artifact unavailable`. It contains no model-generated or externally sourced claims.
 - Keep a deterministic seed or fixed snapshot selection so screen recordings are repeatable.
 - Do not expose secret API keys to the browser.
 - Surface provider, model, and timestamp in the completed state.
 - Starting a new scan aborts the previous request and resets state.
 - Client disconnects abort active analysis and stream delivery.
 - If a stream ends without any terminal event, preserve any ranking already received and enter `demo_fallback`; if no ranking was received, enter `fatal_error`.
-- If analysis fails before a valid ranking is emitted, emit `error` and show a retry action. If ranking rows already exist, preserve them and emit `fallback`.
-- Emit exactly one terminal event: `complete`, `fallback`, or `error`.
+- If analysis fails before a valid ranking is available, emit `error` and show a retry action. If ranking rows already exist, preserve them and emit `complete` with a fallback brief.
+- Emit exactly one terminal event: `complete` or `error`.
 
 ### Visual Direction
 
@@ -284,11 +276,11 @@ None. Full-auto defaults are locked for implementation:
 
 ### Generation Script Tests
 
-- Malformed Claude output is rejected safely.
+- Malformed Codex output is rejected safely.
 - Schema-valid but semantically invalid output is rejected, including duplicate, missing, reordered, and unknown tickers or extra fields.
 - Unknown evidence IDs are rejected.
 - Model output cannot overwrite ranking rows or computed card metrics.
-- Claude timeouts or unavailable credentials fail generation without modifying the last valid artifact.
+- Model timeouts or unavailable credentials fail generation without modifying the last valid artifact.
 
 ### Route Tests
 
@@ -298,13 +290,13 @@ None. Full-auto defaults are locked for implementation:
 - Provider errors do not affect the bundled scan.
 - A truncated stream preserves received ranking rows and enters the fallback state.
 - Repeat scans and client disconnects abort in-flight work.
-- A pre-ranking analysis exception emits `error`, while a post-ranking failure emits `fallback`.
+- A pre-ranking analysis exception emits `error`, while a post-ranking failure emits `complete` with a deterministic fallback brief.
 - The core route makes zero external market-data requests.
 - Cross-origin requests and oversized bodies are rejected before analysis or stream work.
 - The bundled brief's `inputDigest` changes when any ranked row, evidence fact, model identifier, prompt version, or schema version changes. Every metadata mismatch enters the deterministic fallback.
 - Canonical hashing produces the same digest for equivalent object key orders, changes for meaningful array-order differences, and rejects `NaN`, `Infinity`, or other unsupported numeric values before hashing.
 - An end-to-end digest test proves the generator and route use the same canonicalization path.
-- Repeated public scans create zero Anthropic calls, and the deployment rate-limit rule is verified against burst traffic.
+- Repeated public scans create zero Anthropic calls, and the route-level burst limiter is verified against burst traffic.
 - Arbitrary NDJSON transport chunking is parsed correctly: split records, multiple records per chunk, blank lines, CRLF, split UTF-8 bytes, and an unterminated final record.
 - Fake-timer races between narrative completion and the stream deadline emit exactly one raw terminal event.
 
@@ -341,7 +333,7 @@ The final portfolio entry should describe the work in one line:
 
 1. Expand the snapshot universe from 8 to 16 names.
 2. Define the shared Morning Scan row and event contracts.
-3. Build the developer-only validated Claude brief generator and input-digest artifact.
+3. Build the developer-only validated AI brief generator and input-digest artifact.
 4. Build the public streaming Morning Scan endpoint and graceful fallback with no runtime model call.
 5. Implement the homepage state machine and cinematic visual states.
 6. Add unit, route, accessibility, and browser walkthrough tests.
