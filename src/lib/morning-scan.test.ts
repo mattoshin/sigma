@@ -96,6 +96,18 @@ describe("AI Morning Scan", () => {
       index === 0 ? { ...row, divergenceScore: row.divergenceScore + 1e-13 } : row,
     );
     expect(morningScanDigest(platformNoise)).toBe(morningScanDigest(rows));
+    const displayOnlyCurveChange = rows.map((row, index) =>
+      index === 0
+        ? {
+            ...row,
+            curves: {
+              ...row.curves,
+              market: row.curves.market.map((point) => ({ ...point, density: point.density / 2 })),
+            },
+          }
+        : row,
+    );
+    expect(morningScanDigest(displayOnlyCurveChange)).toBe(morningScanDigest(rows));
     expect(() => morningScanDigest([{ ...rows[0], spot: Number.NaN }, ...rows.slice(1)])).toThrow(
       "non-finite number",
     );

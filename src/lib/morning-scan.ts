@@ -129,11 +129,14 @@ function canonicalJson(value: unknown): string {
 }
 
 function canonicalInput(rows: MorningScanRow[]): string {
+  const narrativeRows = rows.map((row) =>
+    Object.fromEntries(Object.entries(row).filter(([key]) => key !== "curves")),
+  );
   return canonicalJson({
     model: MORNING_SCAN_MODEL,
     promptVersion: MORNING_SCAN_PROMPT_VERSION,
     schemaVersion: MORNING_SCAN_SCHEMA_VERSION,
-    rows,
+    rows: narrativeRows,
   });
 }
 

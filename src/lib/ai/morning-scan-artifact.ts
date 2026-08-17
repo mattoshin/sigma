@@ -9,7 +9,7 @@ export const MORNING_SCAN_ARTIFACT: Omit<MorningScanBrief, "source"> = {
   model: "OpenAI Codex, build-time artifact",
   promptVersion: "morning-scan-v1",
   schemaVersion: "1.0",
-  inputDigest: "6e3f19a4d17c801870c758474d257836ba885b044d203b989c0d843cc2e1f8b4",
+  inputDigest: "0974a80656705fd20b26fb18cd1c15b84f3b7e1c394206dd76fa274e4a972d68",
   summary:
     "The widest gaps cluster in index beta and high-volatility retail favorites. The signal is disagreement, not certainty: separate stale Street anchors from genuine risk-premium compensation before expressing a view.",
   items: [

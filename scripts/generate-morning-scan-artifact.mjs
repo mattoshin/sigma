@@ -28,6 +28,9 @@ const complete = events.find((event) => event.type === "complete");
 if (!complete) throw new Error("Morning Scan did not emit a complete event");
 
 const tickers = complete.rows.map((row) => row.ticker);
+const narrativeRows = complete.rows.map((row) =>
+  Object.fromEntries(Object.entries(row).filter(([key]) => key !== "curves")),
+);
 const evidenceByTicker = Object.fromEntries(
   complete.rows.map((row) => [row.ticker, row.evidence.map(({ id, label, value, detail }) => ({ id, label, value, detail }))]),
 );
@@ -66,7 +69,7 @@ Use only the supplied quantitative rows and evidence. Treat every explanation as
 Return exactly one item for each ticker in this exact order: ${tickers.join(", ")}.
 Every evidenceIds value must be copied from that ticker's evidence. Do not give investment advice.
 
-ROWS:\n${JSON.stringify(complete.rows)}\n\nEVIDENCE:\n${JSON.stringify(evidenceByTicker)}`;
+ROWS:\n${JSON.stringify(narrativeRows)}\n\nEVIDENCE:\n${JSON.stringify(evidenceByTicker)}`;
 
 const run = spawnSync(
   "codex",
