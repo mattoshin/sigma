@@ -114,7 +114,8 @@ function canonicalJson(value: unknown): string {
   }
   if (typeof value === "number") {
     if (!Number.isFinite(value)) throw new Error("Morning Scan digest contains a non-finite number");
-    return JSON.stringify(value);
+    const stableValue = Object.is(value, -0) ? 0 : Number(value.toPrecision(12));
+    return JSON.stringify(stableValue);
   }
   if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
   if (typeof value === "object") {

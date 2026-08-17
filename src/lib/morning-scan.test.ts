@@ -92,6 +92,10 @@ describe("AI Morning Scan", () => {
       (row) => Object.fromEntries(Object.entries(row).reverse()) as unknown as typeof row,
     );
     expect(morningScanDigest(reordered)).toBe(morningScanDigest(rows));
+    const platformNoise = rows.map((row, index) =>
+      index === 0 ? { ...row, divergenceScore: row.divergenceScore + 1e-13 } : row,
+    );
+    expect(morningScanDigest(platformNoise)).toBe(morningScanDigest(rows));
     expect(() => morningScanDigest([{ ...rows[0], spot: Number.NaN }, ...rows.slice(1)])).toThrow(
       "non-finite number",
     );
