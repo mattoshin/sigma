@@ -11,7 +11,7 @@ import { CommandPalette } from "@/components/command-palette";
 import { SettingsMenu } from "@/components/settings-menu";
 
 const NAV = [
-  { label: "Terminal", href: "/" },
+  { label: "Morning Scan", href: "/" },
   { label: "Screener", href: "/screener" },
   { label: "Radar", href: "/radar" },
   { label: "Arena", href: "/arena" },
@@ -38,7 +38,7 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
     <TooltipProvider delayDuration={200}>
       <div className="flex min-h-full flex-col">
         <div className="sticky top-0 z-40 bg-canvas/95 backdrop-blur">
-          <header className="flex h-12 items-center gap-5 border-b border-line px-4">
+          <header className="flex h-12 items-center gap-2 border-b border-line px-3 sm:gap-4 sm:px-4">
             {/* wordmark, a distribution-curve mark + RIPTIDE */}
             <Link href="/" className="flex items-center gap-2">
               <svg viewBox="0 0 24 16" className="h-4 w-6 text-accent" fill="none" stroke="currentColor" strokeWidth={2.25} aria-hidden>
@@ -48,9 +48,9 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
               <span className="eyebrow ml-1 hidden md:inline">distributions · ev · edge</span>
             </Link>
 
-            <div className="h-4 w-px bg-line2" />
+            <div className="hidden h-4 w-px bg-line2 lg:block" />
 
-            <nav className="flex items-center">
+            <nav className="hidden items-center lg:flex">
               {NAV.map((n) => {
                 const active = n.href === "/" ? pathname === "/" : pathname.startsWith(n.href);
                 return (
@@ -72,11 +72,12 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
             <div className="ml-auto flex items-center gap-2">
               <button
                 onClick={() => setOpen(true)}
-                className="flex h-9 items-center gap-2.5 rounded-md border border-line2 bg-panel2 px-3 text-sm text-muted transition-colors hover:border-accent/60 hover:text-fg sm:min-w-[220px]"
+                aria-label="Search ticker"
+                className="flex h-9 items-center gap-2.5 rounded-md border border-line2 bg-panel2 px-2.5 text-sm text-muted transition-colors hover:border-accent/60 hover:text-fg sm:min-w-[190px] sm:px-3"
               >
                 <Search className="h-4 w-4 text-accent" />
-                <span className="mono">Search ticker</span>
-                <Kbd className="ml-auto">⌘K</Kbd>
+                <span className="mono hidden sm:inline">Search ticker</span>
+                <Kbd className="ml-auto hidden sm:inline-flex">⌘K</Kbd>
               </button>
 
               <SettingsMenu />
@@ -95,6 +96,23 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
               </Tooltip>
             </div>
           </header>
+          <nav className="flex h-9 items-center gap-1 overflow-x-auto border-b border-line px-2 lg:hidden" aria-label="Primary navigation">
+            {NAV.map((item) => {
+              const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "mono shrink-0 px-2 py-2 text-[10px] uppercase tracking-wider",
+                    active ? "text-accent" : "text-muted",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
           {tape}
         </div>
 

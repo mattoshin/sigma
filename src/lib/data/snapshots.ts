@@ -23,6 +23,14 @@ import TSLA from "@/lib/data/snapshots/TSLA.json";
 import MSFT from "@/lib/data/snapshots/MSFT.json";
 import AMD from "@/lib/data/snapshots/AMD.json";
 import META from "@/lib/data/snapshots/META.json";
+import AMZN from "@/lib/data/snapshots/AMZN.json";
+import GOOGL from "@/lib/data/snapshots/GOOGL.json";
+import AVGO from "@/lib/data/snapshots/AVGO.json";
+import NFLX from "@/lib/data/snapshots/NFLX.json";
+import JPM from "@/lib/data/snapshots/JPM.json";
+import LLY from "@/lib/data/snapshots/LLY.json";
+import COIN from "@/lib/data/snapshots/COIN.json";
+import PLTR from "@/lib/data/snapshots/PLTR.json";
 
 interface ExpiryTemplate {
   dteTarget: number;
@@ -74,7 +82,20 @@ const TEMPLATES: Record<string, SnapshotTemplate> = {
   MSFT: MSFT as SnapshotTemplate,
   AMD: AMD as SnapshotTemplate,
   META: META as SnapshotTemplate,
+  AMZN: AMZN as SnapshotTemplate,
+  GOOGL: GOOGL as SnapshotTemplate,
+  AVGO: AVGO as SnapshotTemplate,
+  NFLX: NFLX as SnapshotTemplate,
+  JPM: JPM as SnapshotTemplate,
+  LLY: LLY as SnapshotTemplate,
+  COIN: COIN as SnapshotTemplate,
+  PLTR: PLTR as SnapshotTemplate,
 };
+
+export const SNAPSHOT_COHORT = {
+  id: "portfolio-demo-2026-08-17",
+  asOf: "2026-08-17T00:00:00.000Z",
+} as const;
 
 export interface SnapshotBundle {
   quote: Quote;

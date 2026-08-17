@@ -107,4 +107,10 @@ export function getSnapshot(ticker: string): SnapshotBundle | null {
   return loadSnapshot(ticker);
 }
 
+/** Deterministic bundle for public demos and scans. Never calls a provider. */
+export function getSnapshotBundle(ticker: string): TickerBundle | null {
+  const snap = loadSnapshot(ticker.toUpperCase());
+  return snap ? bundleFromSnapshot(snap) : null;
+}
+
 export { hasSnapshot };
