@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/app-shell";
+import { PortfolioBar } from "@/components/portfolio-bar";
 import { TickerTape } from "@/components/ticker-tape";
 
 // terminal-ui's primary sans. Mono is the system SF Mono stack (set in globals).
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} h-full`}>
       <body className="min-h-full">
+        <PortfolioBar />
         <script
           dangerouslySetInnerHTML={{
             __html:

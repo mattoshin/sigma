@@ -36,8 +36,8 @@ export function AppShell({ children, tape }: { children: React.ReactNode; tape?:
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className="flex min-h-full flex-col">
-        <div className="sticky top-0 z-40 bg-canvas/95 backdrop-blur">
+      <div className="flex min-h-full flex-1 flex-col">
+        <div className="sticky top-[var(--portfolio-bar-h)] z-40 bg-canvas/95 backdrop-blur">
           <header className="flex h-12 items-center gap-2 border-b border-line px-3 sm:gap-4 sm:px-4">
             {/* wordmark, a distribution-curve mark + RIPTIDE */}
             <Link href="/" className="flex items-center gap-2">
