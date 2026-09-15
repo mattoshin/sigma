@@ -34,6 +34,9 @@
   --warn: #ff8a6b; /* coral, "your view" + divergence, the only warm accent */
   --info: #2fe3bf; /* market-implied = brand cyan */
   --violet: #8b9cff; /* model / AI = periwinkle, distinct from cyan */
+
+  /* Height of the matthewoshin.com PortfolioBar (h-12); sticky app chrome sits below it. */
+  --portfolio-bar-h: 3rem;
 }
 
 /* Colorblind-safe: blue (up) / orange (down). */
@@ -104,8 +107,13 @@ html {
   height: 100%;
 }
 
+/* min-height (not height) so the body grows with the page: the PortfolioBar is a
+   direct body child, and a sticky element can never leave its parent's box. The
+   flex column lets the AppShell (flex-1) still fill the viewport on short pages. */
 body {
-  height: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
   background: var(--canvas);
   color: var(--fg);
   font-family: var(--font-sans);
@@ -303,7 +311,23 @@ body {
   animation-play-state: paused;
 }
 
+/* PortfolioBar sample-data badge: a yellow, gently blinking marker so visitors
+   always know the data is illustrative, not live. Disabled under reduced motion. */
+@keyframes demo-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+.demo-blink {
+  animation: demo-blink 2.4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .demo-blink { animation: none; }
   .animate-tape { animation: none; }
   .pulse-dot { animation: none; }
   .scan-sonar-active i,

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/app-shell";
+import { PortfolioBar } from "@/components/portfolio-bar";
 import { TickerTape } from "@/components/ticker-tape";
 
 // terminal-ui's primary sans. Mono is the system SF Mono stack (set in globals).
@@ -9,6 +10,14 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+});
+
+// The PortfolioBar only: matthewoshin.com's bar renders in Poppins, so this one does too.
+const portfolioBarFont = Poppins({
+  variable: "--font-portfolio-bar",
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -19,8 +28,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} h-full`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${portfolioBarFont.variable} h-full`}>
       <body className="min-h-full">
+        <PortfolioBar />
         <script
           dangerouslySetInnerHTML={{
             __html:
