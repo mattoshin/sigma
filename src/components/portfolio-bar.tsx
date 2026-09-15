@@ -14,7 +14,7 @@
 export function PortfolioBar() {
   return (
     <div className="sticky top-0 z-50 border-b border-white/10! bg-[#05080f]/95 backdrop-blur">
-      <div className="mx-auto flex h-12 max-w-7xl items-center justify-between gap-3 px-4 font-mono text-[11px] uppercase tracking-[0.18em] sm:px-6">
+      <div className="mx-auto flex h-12 max-w-7xl items-center justify-between gap-3 px-4 font-[family-name:var(--font-portfolio-bar)] text-[11px] uppercase tracking-[0.18em] sm:px-6">
         <div className="flex min-w-0 items-center gap-2.5 text-white/55 sm:gap-3">
           <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-2.5 sm:gap-3">
             <a
